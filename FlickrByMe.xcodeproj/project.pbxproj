@@ -15,6 +15,7 @@
 		55A315CB1B7A939100342E9F /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55A315C91B7A939100342E9F /* LaunchScreen.xib */; };
 		55A315D71B7A939100342E9F /* FlickrByMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A315D61B7A939100342E9F /* FlickrByMeTests.m */; };
 		55A315E21B7A989E00342E9F /* FBMPhotosCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A315E11B7A989E00342E9F /* FBMPhotosCollectionViewController.m */; };
+		55A316091B7BC0FC00342E9F /* FBMPhotoEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A316081B7BC0FC00342E9F /* FBMPhotoEntry.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +44,8 @@
 		55A315D61B7A939100342E9F /* FlickrByMeTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FlickrByMeTests.m; sourceTree = "<group>"; };
 		55A315E01B7A989E00342E9F /* FBMPhotosCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMPhotosCollectionViewController.h; sourceTree = "<group>"; };
 		55A315E11B7A989E00342E9F /* FBMPhotosCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMPhotosCollectionViewController.m; sourceTree = "<group>"; };
+		55A316071B7BC0FC00342E9F /* FBMPhotoEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMPhotoEntry.h; sourceTree = "<group>"; };
+		55A316081B7BC0FC00342E9F /* FBMPhotoEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMPhotoEntry.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +97,8 @@
 				55A315C71B7A939100342E9F /* Images.xcassets */,
 				55A315C91B7A939100342E9F /* LaunchScreen.xib */,
 				55A315BA1B7A939100342E9F /* Supporting Files */,
+				55A316071B7BC0FC00342E9F /* FBMPhotoEntry.h */,
+				55A316081B7BC0FC00342E9F /* FBMPhotoEntry.m */,
 			);
 			path = FlickrByMe;
 			sourceTree = "<group>";
@@ -228,6 +233,7 @@
 				55A315C01B7A939100342E9F /* AppDelegate.m in Sources */,
 				55A315BD1B7A939100342E9F /* main.m in Sources */,
 				55A315E21B7A989E00342E9F /* FBMPhotosCollectionViewController.m in Sources */,
+				55A316091B7BC0FC00342E9F /* FBMPhotoEntry.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
