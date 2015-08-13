@@ -8,20 +8,18 @@
 
 #import "FBMPhotosCollectionViewController.h"
 #import "FBMPhotoEntry.h"
+#import "FBMPhotoCell.h"
 #import <MapKit/MapKit.h>
 
 
 @interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate>
 
-
 #pragma mark - Model
 
-@property (nonatomic, strong) NSMutableArray* flickrPhotos;
-
-@property (nonatomic, strong) CLLocationManager* locationManager;
-
-@property (nonatomic, strong) UIRefreshControl* refreshControl;
-
+@property (nonatomic, strong) NSMutableArray    *photoEntries;
+@property (nonatomic, strong) NSMutableArray    *photoCache;
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) UIRefreshControl  *refreshControl;
 
 @end
 
@@ -34,30 +32,31 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
 
 #pragma mark - Overriden Methods
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
   [super viewDidLoad];
 
   // Uncomment the following line to preserve selection between presentations
   // self.clearsSelectionOnViewWillAppear = NO;
 
   // Register cell classes
-  [self.collectionView registerClass:[UICollectionViewCell class]
+  [self.collectionView registerClass:[FBMPhotoCell class]
           forCellWithReuseIdentifier:reuseIdentifier];
 
   self.refreshControl = [[UIRefreshControl alloc] init];
   [self.collectionView addSubview:self.refreshControl];
   [self.refreshControl beginRefreshing];
-  
+
   // Location stuff
   self.locationManager = [[CLLocationManager alloc] init];
   self.locationManager.delegate = self;
 }
 
-- (void) viewWillAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-  
-  if (YES/*!firstLocationHasBeenRetrieved*/) {
+
+  if (YES /*!firstLocationHasBeenRetrieved*/) {
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
     if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
       [self.locationManager requestWhenInUseAuthorization];
@@ -75,32 +74,50 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
 }
 */
 
-#pragma mark <UICollectionViewDataSource>
+#pragma mark UICollectionViewDataSource
 
-- (NSInteger)numberOfSectionsInCollectionView: (UICollectionView *)collectionView
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
   return 1;
 }
 
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section
 {
-  return [self.flickrPhotos count];
+  return [self.photoEntries count];
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  UICollectionViewCell *cell =
-      [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
-                                                forIndexPath:indexPath];
+  FBMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
+                                                                 forIndexPath:indexPath];
 
   // Configure the cell
   [cell setBackgroundColor:[UIColor blackColor]];
 
+  FBMPhotoEntry *entry = [self.photoEntries objectAtIndex:indexPath.row];
+  // Lazy load the photo
+  NSString *urlString =
+
+      // Got this here: https://www.flickr.com/services/api/misc.urls.html
+      [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_s.jpg", entry.farm,
+                                 entry.server, entry.photoId, entry.secret];
+
+  NSURLSession *session = [NSURLSession sharedSession];
+  [[session dataTaskWithURL:[NSURL URLWithString:urlString]
+          completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            UIImage *image = [UIImage imageWithData:data];
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [cell.imageView setImage:image];
+            });
+
+          }] resume];
+
   return cell;
 }
 
-#pragma mark <UICollectionViewDelegate>
+#pragma mark UICollectionViewDelegate
 
 /*
 // Uncomment this method to specify if the specified item should be highlighted during tracking
@@ -131,14 +148,13 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
 }
 */
 
-#pragma mark - <CLLocationManagerDelegate>
+#pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager
     didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
   if (status == kCLAuthorizationStatusAuthorizedAlways ||
-      status ==
-          kCLAuthorizationStatusAuthorizedWhenInUse) {
+      status == kCLAuthorizationStatusAuthorizedWhenInUse) {
     [self.locationManager startUpdatingLocation];
   } else {
     // TODO: Handle this?
@@ -147,18 +163,15 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-  if (!locations || locations.count < 1)
-    return;
-  
+  if (!locations || locations.count < 1) return;
+
   [self.locationManager stopUpdatingLocation];
 
   [self
       flickrPhotosForLocation:[(CLLocation *)[locations lastObject] coordinate]
-              completionBlock:^(CLLocationCoordinate2D location,
-                                NSArray *photos, NSError *error) {
+              completionBlock:^(CLLocationCoordinate2D location, NSArray *photos, NSError *error) {
                 // TODO: check retain cycle
-                self.flickrPhotos =
-                    [[NSMutableArray alloc] initWithArray:photos];
+                self.photoEntries = [[NSMutableArray alloc] initWithArray:photos];
                 dispatch_async(dispatch_get_main_queue(), ^{
                   [self.refreshControl endRefreshing];
                   [self.refreshControl removeFromSuperview];
@@ -169,35 +182,32 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
 
 #pragma mark - Flickr
 
-- (void)flickrPhotosForLocation:( CLLocationCoordinate2D)location
-                completionBlock:(FlickrNearbyPhotosCompletionBlock)completion {
+- (void)flickrPhotosForLocation:(CLLocationCoordinate2D)location
+                completionBlock:(FlickrNearbyPhotosCompletionBlock)completion
+{
+  NSString *urlString =
+      [NSString stringWithFormat:@"https://api.flickr.com/services/rest/"
+                                 @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5."
+                                 @"0&extras=geo&per_page=100&format=json&nojsoncallback=1",
+                                 flickrAppKey, location.latitude, location.longitude];
 
-
-  NSString *urlString = [NSString
-      stringWithFormat:@"https://api.flickr.com/services/rest/"
-                       @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5.0&extras=geo&per_page=100&format=json&nojsoncallback=1",
-                       flickrAppKey, location.latitude, location.longitude];
- 
   NSURLSession *session = [NSURLSession sharedSession];
   [[session dataTaskWithURL:[NSURL URLWithString:urlString]
-          completionHandler:^(NSData *data, NSURLResponse *response,
-                              NSError *error) {
+          completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             // Need to check for a session error
             if (nil != error) {
               completion(location, nil, error);
+              return;
             }
-            // Now check for a Flickr response error, success, fail, etc
-            // TODO
-
+            // TODO: Should check for a Flickr response error, success, fail, etc
+            //
             NSDictionary *json =
-                [NSJSONSerialization JSONObjectWithData:data
-                                                options:kNilOptions
-                                                  error:&error];
+                [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
             // Checking for a JSON parsing error
             if (nil != error) {
               completion(location, nil, error);
+              return;
             }
-            // TODO: Clean this up
             if (json && [json isKindOfClass:[NSDictionary class]]) {
               NSArray *photos = json[@"photos"][@"photo"];
               if (photos && ([photos isKindOfClass:[NSArray class]])) {
@@ -206,10 +216,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
                   [photoEntries addObject:[[FBMPhotoEntry alloc] initWithPhotoDictionary:temp]];
                 }
                 completion(location, photoEntries, error);
-              } else {
-                completion(location, nil, error);
+                return;
               }
-            } else {
               completion(location, nil, error);
             }
           }] resume];
