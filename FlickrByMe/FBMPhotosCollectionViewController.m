@@ -17,7 +17,7 @@
 #pragma mark - Model
 
 @property (nonatomic, strong) NSMutableArray    *photoEntries;
-@property (nonatomic, strong) NSMutableArray    *photoCache;
+@property (nonatomic, strong) NSCache           *photoCache;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) UIRefreshControl  *refreshControl;
 
@@ -50,6 +50,10 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
   // Location stuff
   self.locationManager = [[CLLocationManager alloc] init];
   self.locationManager.delegate = self;
+  
+  // Misc
+  self.photoCache = [[NSCache alloc] init];
+  [self.photoCache setCountLimit:500];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -97,9 +101,13 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
   [cell setBackgroundColor:[UIColor blackColor]];
 
   FBMPhotoEntry *entry = [self.photoEntries objectAtIndex:indexPath.row];
+  
+  UIImage* cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
+  if (cachedPhoto) {
+    [cell.imageView setImage:cachedPhoto];
+  } else {
   // Lazy load the photo
   NSString *urlString =
-
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
       [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_s.jpg", entry.farm,
                                  entry.server, entry.photoId, entry.secret];
@@ -108,11 +116,14 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)( CLLocationCoordinate2D locati
   [[session dataTaskWithURL:[NSURL URLWithString:urlString]
           completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             UIImage *image = [UIImage imageWithData:data];
+            // Add it to the cache so we can be speedy...
+            [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:entry.photoId]];
             dispatch_async(dispatch_get_main_queue(), ^{
               [cell.imageView setImage:image];
             });
 
           }] resume];
+  }
 
   return cell;
 }
