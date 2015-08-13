@@ -32,4 +32,10 @@
   return self;
 }
 
+-(void)prepareForReuse
+{
+  // Don't want to see the old image while new one is async loading...
+  [self.imageView setImage:nil];
+}
+
 @end

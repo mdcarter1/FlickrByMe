@@ -103,35 +103,36 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
                                                                  forIndexPath:indexPath];
 
   // Configure the cell
- // [cell setBackgroundColor:[UIColor blackColor]];
+  // [cell setBackgroundColor:[UIColor blackColor]];
 
   FBMPhotoEntry *entry = [self.photoEntries objectAtIndex:indexPath.row];
-  
-  UIImage* cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
+
+  UIImage *cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
   if (cachedPhoto) {
     [cell.imageView setImage:cachedPhoto];
   } else {
-  // Lazy load the photo
-  NSString *urlString =
-      // Got this here: https://www.flickr.com/services/api/misc.urls.html
-      [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_s.jpg", entry.farm,
-                                 entry.server, entry.photoId, entry.secret];
+    // Lazy load the photo
+    NSString *urlString =
+        // Got this here: https://www.flickr.com/services/api/misc.urls.html
+        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_s.jpg",
+                                   (long)entry.farm, (long)entry.server, entry.photoId,
+                                   entry.secret];
 
 
-  NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-  [NSURLConnection
-      sendAsynchronousRequest:request
-                        queue:self.photoOpQueue
-            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-              UIImage *image = [UIImage imageWithData:data];
-              // Add it to the cache so we can be speedy...
-              [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:entry.photoId]];
-              dispatch_async(dispatch_get_main_queue(), ^{
-                [cell.imageView setImage:image];
-              });
-            }];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
+    [NSURLConnection
+        sendAsynchronousRequest:request
+                          queue:self.photoOpQueue
+              completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
+                UIImage *image = [UIImage imageWithData:data];
+                // Add it to the cache so we can be speedy...
+                [self.photoCache setObject:image
+                                    forKey:[NSNumber numberWithLongLong:entry.photoId]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                  [cell.imageView setImage:image];
+                });
+              }];
   }
-
   return cell;
 }
 
