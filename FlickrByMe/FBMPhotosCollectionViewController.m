@@ -144,7 +144,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 {
   FBMPhotoViewController *vc = [FBMPhotoViewController new];
   [vc setEntry:self.photoEntries[indexPath.row]];
-  [self.navigationController pushViewController:vc animated:YES];
+  [self presentViewController:vc animated:YES completion:nil];
+  //[self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - CLLocationManagerDelegate
