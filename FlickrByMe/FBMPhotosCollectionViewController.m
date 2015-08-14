@@ -9,6 +9,7 @@
 #import "FBMPhotosCollectionViewController.h"
 #import "FBMPhotoEntry.h"
 #import "FBMPhotoCell.h"
+#import "FBMPhotoViewController.h"
 #import <MapKit/MapKit.h>
 
 
@@ -141,7 +142,9 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 - (void)collectionView:(UICollectionView *)collectionView
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [self.navigationController pushViewController:[UIViewController new] animated:YES];
+  FBMPhotoViewController *vc = [FBMPhotoViewController new];
+  [vc setEntry:self.photoEntries[indexPath.row]];
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - CLLocationManagerDelegate

@@ -17,6 +17,8 @@
 		55A315D71B7A939100342E9F /* FlickrByMeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A315D61B7A939100342E9F /* FlickrByMeTests.m */; };
 		55A315E21B7A989E00342E9F /* FBMPhotosCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A315E11B7A989E00342E9F /* FBMPhotosCollectionViewController.m */; };
 		55A316091B7BC0FC00342E9F /* FBMPhotoEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 55A316081B7BC0FC00342E9F /* FBMPhotoEntry.m */; };
+		55F7ADE31B7D4812000A9406 /* FBMPhotoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 55F7ADE11B7D4812000A9406 /* FBMPhotoViewController.m */; };
+		55F7ADE41B7D4812000A9406 /* FBMPhotoViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 55F7ADE21B7D4812000A9406 /* FBMPhotoViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,9 @@
 		55A315E11B7A989E00342E9F /* FBMPhotosCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMPhotosCollectionViewController.m; sourceTree = "<group>"; };
 		55A316071B7BC0FC00342E9F /* FBMPhotoEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMPhotoEntry.h; sourceTree = "<group>"; };
 		55A316081B7BC0FC00342E9F /* FBMPhotoEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMPhotoEntry.m; sourceTree = "<group>"; };
+		55F7ADE01B7D4812000A9406 /* FBMPhotoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBMPhotoViewController.h; sourceTree = "<group>"; };
+		55F7ADE11B7D4812000A9406 /* FBMPhotoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBMPhotoViewController.m; sourceTree = "<group>"; };
+		55F7ADE21B7D4812000A9406 /* FBMPhotoViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FBMPhotoViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +104,9 @@
 				55A315C11B7A939100342E9F /* ViewController.h */,
 				55A315C21B7A939100342E9F /* ViewController.m */,
 				55A315C41B7A939100342E9F /* Main.storyboard */,
+				55F7ADE01B7D4812000A9406 /* FBMPhotoViewController.h */,
+				55F7ADE11B7D4812000A9406 /* FBMPhotoViewController.m */,
+				55F7ADE21B7D4812000A9406 /* FBMPhotoViewController.xib */,
 				55A315C71B7A939100342E9F /* Images.xcassets */,
 				55A315C91B7A939100342E9F /* LaunchScreen.xib */,
 				55A315BA1B7A939100342E9F /* Supporting Files */,
@@ -215,6 +223,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55A315C61B7A939100342E9F /* Main.storyboard in Resources */,
+				55F7ADE41B7D4812000A9406 /* FBMPhotoViewController.xib in Resources */,
 				55A315CB1B7A939100342E9F /* LaunchScreen.xib in Resources */,
 				55A315C81B7A939100342E9F /* Images.xcassets in Resources */,
 			);
@@ -235,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				55A315C31B7A939100342E9F /* ViewController.m in Sources */,
+				55F7ADE31B7D4812000A9406 /* FBMPhotoViewController.m in Sources */,
 				551436C51B7C1E7C00B46526 /* FBMPhotoCell.m in Sources */,
 				55A315C01B7A939100342E9F /* AppDelegate.m in Sources */,
 				55A315BD1B7A939100342E9F /* main.m in Sources */,
