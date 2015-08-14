@@ -6,6 +6,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FBMPhotoViewController">
             <connections>
+                <outlet property="activityView" destination="Q52-A6-xGG" id="y5x-xr-3od"/>
                 <outlet property="imageView" destination="eNB-ai-Kxa" id="ech-4C-t3U"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -18,13 +19,18 @@
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eNB-ai-Kxa">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                 </imageView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Q52-A6-xGG">
+                    <rect key="frame" x="290" y="290" width="20" height="20"/>
+                </activityIndicatorView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="eNB-ai-Kxa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="3ny-DL-Z1O"/>
-                <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="EfL-QZ-Wzb"/>
-                <constraint firstAttribute="trailing" secondItem="eNB-ai-Kxa" secondAttribute="trailing" id="dNb-yF-ytp"/>
-                <constraint firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="bottom" id="pww-85-YTs"/>
+                <constraint firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="bottom" id="91e-9y-axM"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ap2-vm-gzz"/>
+                <constraint firstAttribute="trailing" secondItem="eNB-ai-Kxa" secondAttribute="trailing" id="cJG-Nb-S3Y"/>
+                <constraint firstItem="Q52-A6-xGG" firstAttribute="centerY" secondItem="eNB-ai-Kxa" secondAttribute="centerY" id="mB9-5x-5hm"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerX" secondItem="Q52-A6-xGG" secondAttribute="centerX" id="olt-K3-uVs"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uiG-Dv-fe1"/>
             </constraints>
         </view>
     </objects>
