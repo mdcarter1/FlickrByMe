@@ -11,26 +11,24 @@
 
 @interface FBMPhotoViewController ()
 
-@property (weak, nonatomic) IBOutlet UIImageView *imageView;
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+@property (nonatomic, strong) UIActivityIndicatorView *activityView;
 
 @end
 
 @implementation FBMPhotoViewController
 
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view from its nib.
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewDidLoad
+{
+  [super viewDidLoad];
+  // Do any additional setup after loading the view from its nib.
 }
 
 /*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
+// In a storyboard-based application, you will often want to do a little preparation before
+navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
@@ -42,6 +40,11 @@
 - (void)setEntry:(FBMPhotoEntry *)entry
 {
   _entry = entry;
+  
+  self.activityView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+  self.activityView.center = self.view.center;
+  [self.view addSubview:self.activityView];
+  [self.activityView startAnimating];
 
   // Lazy load the photo
   NSString *urlString =
@@ -55,6 +58,7 @@
                         queue:[NSOperationQueue new]
             completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
               dispatch_async(dispatch_get_main_queue(), ^{
+                [self.activityView stopAnimating];
                 [self.imageView setImage:[UIImage imageWithData:data]];
               });
             }];
