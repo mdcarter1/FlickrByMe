@@ -109,7 +109,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
     // Lazy load the photo
     NSString *urlString =
         // Got this here: https://www.flickr.com/services/api/misc.urls.html
-        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_m.jpg",
+        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_t.jpg",
                                    (long)entry.farm, (long)entry.server, entry.photoId,
                                    entry.secret];
 
@@ -125,6 +125,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
                                     forKey:[NSNumber numberWithLongLong:entry.photoId]];
                 dispatch_async(dispatch_get_main_queue(), ^{
                   [cell.imageView setImage:image];
+                  [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 });
               }];
   }
@@ -143,15 +144,16 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 }
 
 #pragma mark - UICollectionView
-/*
+
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  FBMPhotoEntry* entry = self.photoEntries[indexPath.row];
-  CGSize size = photo.thumbnail.size.width > 0 ? photo.thumbnail.size : CGSizeMake(100, 100);
-  retval.height += 35; retval.width += 35; return retval;
-}*/
+  FBMPhotoEntry *entry = self.photoEntries[indexPath.row];
+  UIImage *thumb = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
+  CGSize size = thumb.size.width > 0 ? thumb.size : CGSizeMake(100, 100);
+  return size;
+}
 
 #pragma mark - CLLocationManagerDelegate
 
