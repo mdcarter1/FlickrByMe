@@ -28,10 +28,10 @@
   [self.activityView startAnimating];
 }
 
-- (BOOL)prefersStatusBarHidden
+/*- (BOOL)prefersStatusBarHidden
 {
   return YES;
-}
+}*/
 
 #pragma mark - Property Overrides
 

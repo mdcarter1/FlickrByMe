@@ -152,10 +152,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   // So to support pagination if we are displaying the last cell and we know there is more
   // pages still available on Flickr go ahead and request the next page.
   if ((indexPath.row == [self.photoEntries count] - 1) && (self.currentPage < self.lastPage)) {
-    // self.currentPage++;
-    NSLog(@"Requesting page %li from Flickr", (long)self.currentPage + 1);
     [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
-
   }
 }
 
@@ -164,8 +161,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
 {
   FBMPhotoViewController *vc = [FBMPhotoViewController new];
   [vc setEntry:self.photoEntries[indexPath.row]];
-  [self presentViewController:vc animated:YES completion:nil];
-  //[self.navigationController pushViewController:vc animated:YES];
+  //[self presentViewController:vc animated:YES completion:nil];
+  [self.navigationController pushViewController:vc animated:YES];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
@@ -251,6 +248,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
                            page:(NSInteger)page
                 completionBlock:(FlickrNearbyPhotosCompletionBlock)completion
 {
+  NSLog(@"Requesting page %li from Flickr", (long)page);
+
   NSString *urlString =
       [NSString stringWithFormat:@"https://api.flickr.com/services/rest/"
                                  @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5."
