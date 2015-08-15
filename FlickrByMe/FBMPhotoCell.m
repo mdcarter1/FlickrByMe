@@ -13,6 +13,7 @@
 
 -(void)prepareForReuse
 {
+  [super prepareForReuse];
   // Don't want to see the old image while new one is async loading...
   [self.imageView setImage:nil];
 }

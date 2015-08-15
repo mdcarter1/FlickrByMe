@@ -16,22 +16,24 @@
 @interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate,
                                                  UICollectionViewDelegateFlowLayout>
 
-#pragma mark - Model
-
 @property (nonatomic, strong) NSMutableArray    *photoEntries;
 @property (nonatomic, strong) NSCache           *photoCache;
 @property (nonatomic, strong) NSOperationQueue  *photoOpQueue;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, assign) CLLocationCoordinate2D currentCoordinates;
 @property (nonatomic, strong) UIRefreshControl  *refreshControl;
+@property (nonatomic, assign) NSInteger          currentPage;
+@property (nonatomic, assign) NSInteger          lastPage;
 
 @end
 
 @implementation FBMPhotosCollectionViewController
 
-static NSString * const flickrAppKey    = @"58113b676ebff68e3c1c05f58c8a8cf7";
-static NSString * const reuseIdentifier = @"FlickrPhotoCell";
+static NSInteger  const flickerPhotosPerPage = 50;
+static NSString * const flickrAppKey         = @"58113b676ebff68e3c1c05f58c8a8cf7";
+static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
 
-typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D location, NSArray *photos,
+typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger page, NSArray *photos,
                                                   NSError *error);
 
 #pragma mark - Overriden Methods
@@ -57,6 +59,12 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   
   self.photoOpQueue = [[NSOperationQueue alloc] init];
   [self.photoOpQueue setMaxConcurrentOperationCount:3];
+  
+  // Note: Flickr search API starts pages at index 1
+  self.currentPage = 0;
+  self.lastPage = 0;
+  
+  self.photoEntries = [NSMutableArray new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -91,6 +99,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
+  //return (self.currentPage < self.pages) ? [self.photoEntries count] + 1
+  //                                            : [self.photoEntries count];
   return [self.photoEntries count];
 }
 
@@ -125,7 +135,8 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
                                     forKey:[NSNumber numberWithLongLong:entry.photoId]];
                 dispatch_async(dispatch_get_main_queue(), ^{
                   [cell.imageView setImage:image];
-                  [self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
+                  // Don't need to do this if statically sizing the cells
+                  //[self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
                 });
               }];
   }
@@ -133,6 +144,20 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 }
 
 #pragma mark - UICollectionViewDelegate
+
+- (void)collectionView:(UICollectionView *)collectionView
+       willDisplayCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  // So to support pagination if we are displaying the last cell and we know there is more
+  // pages still available on Flickr go ahead and request the next page.
+  if ((indexPath.row == [self.photoEntries count] - 1) && (self.currentPage < self.lastPage)) {
+    // self.currentPage++;
+    NSLog(@"Requesting page %li from Flickr", (long)self.currentPage + 1);
+    [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
+
+  }
+}
 
 - (void)collectionView:(UICollectionView *)collectionView
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -143,8 +168,9 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   //[self.navigationController pushViewController:vc animated:YES];
 }
 
-#pragma mark - UICollectionView
-
+#pragma mark - UICollectionViewDelegateFlowLayout
+/*
+ // Don't need to do this if statically sizing the cells
 - (CGSize)collectionView:(UICollectionView *)collectionView
                   layout:(UICollectionViewLayout *)collectionViewLayout
   sizeForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -153,7 +179,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   UIImage *thumb = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
   CGSize size = thumb.size.width > 0 ? thumb.size : CGSizeMake(100, 100);
   return size;
-}
+}*/
 
 #pragma mark - CLLocationManagerDelegate
 
@@ -171,14 +197,48 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
   if (!locations || locations.count < 1) return;
-
+  
   [self.locationManager stopUpdatingLocation];
 
+  self.currentCoordinates = [(CLLocation *)[locations lastObject] coordinate];
+  [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
+/*
   [self
-      flickrPhotosForLocation:[(CLLocation *)[locations lastObject] coordinate]
-              completionBlock:^(CLLocationCoordinate2D location, NSArray *photos, NSError *error) {
+      flickrPhotosForLocation:self.currentCoordinates
+                         page:self.currentPage + 1
+              completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
+                self.lastPage = pages;
+                if (page == ++self.currentPage) {
+                  [self.photoEntries addObjectsFromArray:photos];
+                } else {
+                  // Uh oh!
+                  NSAssert(YES, @"Uh oh we are adding the same page twice!");
+                }
                 // TODO: check retain cycle
-                self.photoEntries = [[NSMutableArray alloc] initWithArray:photos];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                  [self.refreshControl endRefreshing];
+                  [self.refreshControl removeFromSuperview];
+                  [self.collectionView reloadData];
+                });
+              }];*/
+}
+
+#pragma mark - Flickr
+
+- (void)addPhotoPageForLocation:(CLLocationCoordinate2D)location page:(NSInteger)page
+{
+  [self
+      flickrPhotosForLocation:self.currentCoordinates
+                         page:self.currentPage + 1
+              completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
+                self.lastPage = pages;
+                if (page == ++self.currentPage) {
+                  [self.photoEntries addObjectsFromArray:photos];
+                } else {
+                  // Uh oh!
+                  NSAssert(YES, @"Uh oh we are adding the same page twice!");
+                }
+                // TODO: check retain cycle
                 dispatch_async(dispatch_get_main_queue(), ^{
                   [self.refreshControl endRefreshing];
                   [self.refreshControl removeFromSuperview];
@@ -187,45 +247,47 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
               }];
 }
 
-#pragma mark - Flickr
-
 - (void)flickrPhotosForLocation:(CLLocationCoordinate2D)location
+                           page:(NSInteger)page
                 completionBlock:(FlickrNearbyPhotosCompletionBlock)completion
 {
   NSString *urlString =
       [NSString stringWithFormat:@"https://api.flickr.com/services/rest/"
                                  @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5."
-                                 @"0&extras=geo&per_page=100&format=json&nojsoncallback=1",
-                                 flickrAppKey, location.latitude, location.longitude];
+                                 @"0&extras=geo&per_page=%li&page=%li&format=json&nojsoncallback=1",
+                                 flickrAppKey, location.latitude, location.longitude,
+                                 (long)flickerPhotosPerPage, (long)page];
 
   NSURLSession *session = [NSURLSession sharedSession];
   [[session dataTaskWithURL:[NSURL URLWithString:urlString]
           completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
             // Need to check for a session error
             if (nil != error) {
-              completion(location, nil, error);
+              completion(0, 0, nil, error);
               return;
             }
             // TODO: Should check for a Flickr response error, success, fail, etc
             //
             NSDictionary *json =
-                [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
             // Checking for a JSON parsing error
             if (nil != error) {
-              completion(location, nil, error);
+              completion(0, 0, nil, error);
               return;
             }
             if (json && [json isKindOfClass:[NSDictionary class]]) {
+              NSInteger page = [[json[@"photos"] objectForKey:@"page"] integerValue];
+              NSInteger pages = [[json[@"photos"] objectForKey:@"pages"] integerValue];
               NSArray *photos = json[@"photos"][@"photo"];
               if (photos && ([photos isKindOfClass:[NSArray class]])) {
                 NSMutableArray *photoEntries = [NSMutableArray new];
                 for (NSDictionary *temp in photos) {
                   [photoEntries addObject:[[FBMPhotoEntry alloc] initWithPhotoDictionary:temp]];
                 }
-                completion(location, photoEntries, error);
+                completion(pages, page, photoEntries, error);
                 return;
               }
-              completion(location, nil, error);
+              completion(0, 0, nil, error);
             }
           }] resume];
 }
