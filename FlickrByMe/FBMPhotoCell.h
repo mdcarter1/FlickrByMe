@@ -10,6 +10,6 @@
 
 @interface FBMPhotoCell : UICollectionViewCell
 
-@property (nonatomic, strong) UIImageView *imageView;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end

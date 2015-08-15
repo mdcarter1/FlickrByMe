@@ -13,7 +13,8 @@
 #import <MapKit/MapKit.h>
 
 
-@interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate>
+@interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate,
+                                                 UICollectionViewDelegateFlowLayout>
 
 #pragma mark - Model
 
@@ -41,10 +42,6 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 
   // Uncomment the following line to preserve selection between presentations
   // self.clearsSelectionOnViewWillAppear = NO;
-
-  // Register cell classes
-  [self.collectionView registerClass:[FBMPhotoCell class]
-          forCellWithReuseIdentifier:reuseIdentifier];
 
   self.refreshControl = [[UIRefreshControl alloc] init];
   [self.collectionView addSubview:self.refreshControl];
@@ -84,7 +81,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
 }
 */
 
-#pragma mark UICollectionViewDataSource
+#pragma mark - UICollectionViewDataSource
 
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
@@ -103,9 +100,6 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   FBMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                  forIndexPath:indexPath];
 
-  // Configure the cell
-  // [cell setBackgroundColor:[UIColor blackColor]];
-
   FBMPhotoEntry *entry = [self.photoEntries objectAtIndex:indexPath.row];
 
   UIImage *cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
@@ -115,7 +109,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
     // Lazy load the photo
     NSString *urlString =
         // Got this here: https://www.flickr.com/services/api/misc.urls.html
-        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_s.jpg",
+        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_m.jpg",
                                    (long)entry.farm, (long)entry.server, entry.photoId,
                                    entry.secret];
 
@@ -137,7 +131,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   return cell;
 }
 
-#pragma mark UICollectionViewDelegate
+#pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath
@@ -147,6 +141,17 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(CLLocationCoordinate2D locatio
   [self presentViewController:vc animated:YES completion:nil];
   //[self.navigationController pushViewController:vc animated:YES];
 }
+
+#pragma mark - UICollectionView
+/*
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  FBMPhotoEntry* entry = self.photoEntries[indexPath.row];
+  CGSize size = photo.thumbnail.size.width > 0 ? photo.thumbnail.size : CGSizeMake(100, 100);
+  retval.height += 35; retval.width += 35; return retval;
+}*/
 
 #pragma mark - CLLocationManagerDelegate
 

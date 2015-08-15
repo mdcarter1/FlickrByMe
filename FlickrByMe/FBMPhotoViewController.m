@@ -42,7 +42,7 @@
   // Lazy load the photo
   NSString *urlString =
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
-      [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_d.jpg",
+      [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_b.jpg",
                                  (long)entry.farm, (long)entry.server, entry.photoId, entry.secret];
 
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
