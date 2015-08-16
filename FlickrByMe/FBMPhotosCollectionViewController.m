@@ -210,7 +210,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
                       NSUInteger resultsSize = [self.photoEntries count];
                       [self.photoEntries addObjectsFromArray:photos];
                       NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
-                      for (int i = resultsSize; i < resultsSize + photos.count; i++) {
+                      for (NSUInteger i = resultsSize; i < resultsSize + photos.count; i++) {
                         [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                       }
                       [self.collectionView insertItemsAtIndexPaths:arrayWithIndexPaths];
