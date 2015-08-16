@@ -2,7 +2,7 @@
 //  AppDelegate.h
 //  FlickrByMe
 //
-//  Created by Carter Mike-EMC045 on 8/11/15.
+//  Created by Mike Carter on 8/11/15.
 //  Copyright (c) 2015 Mike Carter. All rights reserved.
 //
 
