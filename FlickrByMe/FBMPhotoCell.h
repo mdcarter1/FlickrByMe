@@ -8,8 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+@class FBMPhotoEntry;
+
+typedef void (^FBMPhotoCellLoadedBlock)(UIImage* image);
+
 @interface FBMPhotoCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
+
+- (void)loadForPhoto:(FBMPhotoEntry *)entry
+                    queue:(NSOperationQueue *)queue
+          completionBlock:(FBMPhotoCellLoadedBlock)completion;
+
+- (void)cancelLoad;
 
 @end

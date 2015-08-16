@@ -29,7 +29,7 @@
 
 @implementation FBMPhotosCollectionViewController
 
-static NSInteger  const flickerPhotosPerPage = 50;
+static NSInteger  const flickrPhotosPerPage = 50;
 static NSString * const flickrAppKey         = @"58113b676ebff68e3c1c05f58c8a8cf7";
 static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
 
@@ -100,29 +100,12 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   if (cachedPhoto) {
     [cell.imageView setImage:cachedPhoto];
   } else {
-    // Lazy load the photo
-    NSString *urlString =
-        // Got this here: https://www.flickr.com/services/api/misc.urls.html
-        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_t.jpg",
-                                   (long)entry.farm, (long)entry.server, entry.photoId,
-                                   entry.secret];
-
-
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-    [NSURLConnection
-        sendAsynchronousRequest:request
-                          queue:self.photoOpQueue
-              completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-                UIImage *image = [UIImage imageWithData:data];
-                // Add it to the cache so we can be speedy...
-                [self.photoCache setObject:image
-                                    forKey:[NSNumber numberWithLongLong:entry.photoId]];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                  [cell.imageView setImage:image];
-                  // Don't need to do this since I'm fixed size cells
-                  //[self.collectionView reloadItemsAtIndexPaths:@[indexPath]];
-                });
-              }];
+    [cell loadForPhoto:entry
+                  queue:self.photoOpQueue
+        completionBlock:^(UIImage *image) {
+          // Add it to the cache so we can be speedy...
+          [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:entry.photoId]];
+        }];
   }
   return cell;
 }
@@ -138,6 +121,13 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   if ((indexPath.row == [self.photoEntries count] - 1) && (self.currentPage < self.lastPage)) {
     [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
   }
+}
+
+- (void)collectionView:(UICollectionView *)collectionView
+  didEndDisplayingCell:(UICollectionViewCell *)cell
+    forItemAtIndexPath:(NSIndexPath *)indexPath
+{
+  //[((FBMPhotoCell*)cell) cancelLoadThumb];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -234,7 +224,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
                                  @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5."
                                  @"0&extras=geo&per_page=%li&page=%li&format=json&nojsoncallback=1",
                                  flickrAppKey, location.latitude, location.longitude,
-                                 (long)flickerPhotosPerPage, (long)page];
+                                 (long)flickrPhotosPerPage, (long)page];
 
   NSURLSession *session = [NSURLSession sharedSession];
   [[session dataTaskWithURL:[NSURL URLWithString:urlString]
