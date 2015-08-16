@@ -21,17 +21,15 @@
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];
-  // Do any additional setup after loading the view from its nib.
-  
+  [super viewDidLoad];  
   [self.activityView setHidesWhenStopped:YES];
   [self.activityView startAnimating];
 }
 
-/*- (BOOL)prefersStatusBarHidden
+- (BOOL)prefersStatusBarHidden
 {
   return YES;
-}*/
+}
 
 #pragma mark - Property Overrides
 

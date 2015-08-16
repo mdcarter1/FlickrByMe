@@ -24,12 +24,9 @@
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Q52-A6-xGG">
                     <rect key="frame" x="290" y="290" width="20" height="20"/>
                 </activityIndicatorView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb4-MH-uLz">
-                    <rect key="frame" x="8" y="8" width="46" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="46" id="b6s-FZ-qRG"/>
-                    </constraints>
-                    <state key="normal" title="Done">
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nb4-MH-uLz">
+                    <rect key="frame" x="20" y="20" width="30" height="30"/>
+                    <state key="normal" image="ButtonLeft">
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                     <connections>
@@ -40,15 +37,30 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="bottom" id="91e-9y-axM"/>
+                <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="RqY-67-xq7"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" id="Trq-bS-zVg"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ap2-vm-gzz"/>
+                <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="aqy-Nq-EUW"/>
                 <constraint firstAttribute="trailing" secondItem="eNB-ai-Kxa" secondAttribute="trailing" id="cJG-Nb-S3Y"/>
+                <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" symbolic="YES" id="k1V-JW-jzy"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leadingMargin" id="l8n-XA-k79"/>
                 <constraint firstItem="Q52-A6-xGG" firstAttribute="centerY" secondItem="eNB-ai-Kxa" secondAttribute="centerY" id="mB9-5x-5hm"/>
+                <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" symbolic="YES" id="nif-Po-QxG"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerX" secondItem="Q52-A6-xGG" secondAttribute="centerX" id="olt-K3-uVs"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uiG-Dv-fe1"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
+            <variation key="default">
+                <mask key="constraints">
+                    <exclude reference="RqY-67-xq7"/>
+                    <exclude reference="Trq-bS-zVg"/>
+                    <exclude reference="aqy-Nq-EUW"/>
+                    <exclude reference="l8n-XA-k79"/>
+                </mask>
+            </variation>
         </view>
     </objects>
+    <resources>
+        <image name="ButtonLeft" width="30" height="30"/>
+    </resources>
 </document>

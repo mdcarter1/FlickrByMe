@@ -135,7 +135,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
 {
   FBMPhotoViewController *vc = [FBMPhotoViewController new];
   [vc setEntry:self.photoEntries[indexPath.row]];
-  [self.navigationController pushViewController:vc animated:YES];
+  [self presentViewController:vc animated:YES completion:nil];
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
