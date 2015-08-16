@@ -20,6 +20,22 @@
             <subviews>
                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eNB-ai-Kxa">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="500" id="a0b-39-qPN"/>
+                        <constraint firstAttribute="width" constant="500" id="odG-PU-mIO"/>
+                    </constraints>
+                    <variation key="default">
+                        <mask key="constraints">
+                            <exclude reference="a0b-39-qPN"/>
+                            <exclude reference="odG-PU-mIO"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=regular">
+                        <mask key="constraints">
+                            <include reference="a0b-39-qPN"/>
+                            <include reference="odG-PU-mIO"/>
+                        </mask>
+                    </variation>
                 </imageView>
                 <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="Q52-A6-xGG">
                     <rect key="frame" x="290" y="290" width="20" height="20"/>
@@ -37,25 +53,50 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="bottom" id="91e-9y-axM"/>
+                <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="eNB-ai-Kxa" secondAttribute="top" id="JcK-DK-FVz"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="RqY-67-xq7"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" id="Trq-bS-zVg"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerY" secondItem="Q52-A6-xGG" secondAttribute="centerY" id="W7A-B5-T95"/>
+                <constraint firstAttribute="centerX" secondItem="eNB-ai-Kxa" secondAttribute="centerX" id="YKN-db-PH7"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ap2-vm-gzz"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="aqy-Nq-EUW"/>
                 <constraint firstAttribute="trailing" secondItem="eNB-ai-Kxa" secondAttribute="trailing" id="cJG-Nb-S3Y"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="nb4-MH-uLz" secondAttribute="top" id="fug-uz-3yz"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="20" symbolic="YES" id="k1V-JW-jzy"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leadingMargin" id="l8n-XA-k79"/>
                 <constraint firstItem="Q52-A6-xGG" firstAttribute="centerY" secondItem="eNB-ai-Kxa" secondAttribute="centerY" id="mB9-5x-5hm"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="20" symbolic="YES" id="nif-Po-QxG"/>
-                <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerX" secondItem="Q52-A6-xGG" secondAttribute="centerX" id="olt-K3-uVs"/>
+                <constraint firstItem="Q52-A6-xGG" firstAttribute="centerX" secondItem="eNB-ai-Kxa" secondAttribute="centerX" id="olt-K3-uVs"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerX" secondItem="Q52-A6-xGG" secondAttribute="centerX" id="tVJ-zg-rQE"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="uiG-Dv-fe1"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <variation key="default">
                 <mask key="constraints">
+                    <exclude reference="JcK-DK-FVz"/>
                     <exclude reference="RqY-67-xq7"/>
                     <exclude reference="Trq-bS-zVg"/>
                     <exclude reference="aqy-Nq-EUW"/>
                     <exclude reference="l8n-XA-k79"/>
+                    <exclude reference="W7A-B5-T95"/>
+                    <exclude reference="YKN-db-PH7"/>
+                    <exclude reference="fug-uz-3yz"/>
+                    <exclude reference="tVJ-zg-rQE"/>
+                </mask>
+            </variation>
+            <variation key="heightClass=regular-widthClass=regular">
+                <mask key="constraints">
+                    <include reference="JcK-DK-FVz"/>
+                    <exclude reference="91e-9y-axM"/>
+                    <include reference="W7A-B5-T95"/>
+                    <include reference="YKN-db-PH7"/>
+                    <exclude reference="ap2-vm-gzz"/>
+                    <exclude reference="cJG-Nb-S3Y"/>
+                    <exclude reference="fug-uz-3yz"/>
+                    <include reference="tVJ-zg-rQE"/>
+                    <exclude reference="uiG-Dv-fe1"/>
+                    <exclude reference="mB9-5x-5hm"/>
+                    <exclude reference="olt-K3-uVs"/>
                 </mask>
             </variation>
         </view>
