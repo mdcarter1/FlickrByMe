@@ -10,8 +10,8 @@
 
 @interface FBMPhotoEntry : NSObject
 
-@property (nonatomic, copy)   NSString *title;
-@property (nonatomic, copy)   NSString *secret;
+@property (nonatomic, copy  ) NSString  *title;
+@property (nonatomic, copy  ) NSString  *secret;
 @property (nonatomic, assign) NSInteger farm;
 @property (nonatomic, assign) NSInteger server;
 @property (nonatomic, assign) long long photoId;
