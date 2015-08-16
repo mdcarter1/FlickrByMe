@@ -196,22 +196,30 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
       flickrPhotosForLocation:self.currentCoordinates
                          page:self.currentPage + 1
               completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
-                
                 // TODO: Handle the error if necessary
-                
                 self.lastPage = pages;
                 if (page == ++self.currentPage) {
-                  [self.photoEntries addObjectsFromArray:photos];
+                  // TODO: check retain cycle
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.refreshControl endRefreshing];
+                    [self.refreshControl removeFromSuperview];
+                    // Could just call 'reloadData' here but that might be a little choppy on the
+                    // on the scroll so instead do it the right way and insert the new rows.
+                    //[self.collectionView reloadData];
+                    [self.collectionView performBatchUpdates:^{
+                      NSUInteger resultsSize = [self.photoEntries count];
+                      [self.photoEntries addObjectsFromArray:photos];
+                      NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
+                      for (int i = resultsSize; i < resultsSize + photos.count; i++) {
+                        [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+                      }
+                      [self.collectionView insertItemsAtIndexPaths:arrayWithIndexPaths];
+                    } completion:nil];
+                  });
                 } else {
                   // Uh oh!
                   NSAssert(YES, @"Uh oh we are adding the same page twice!");
                 }
-                // TODO: check retain cycle
-                dispatch_async(dispatch_get_main_queue(), ^{
-                  [self.refreshControl endRefreshing];
-                  [self.refreshControl removeFromSuperview];
-                  [self.collectionView reloadData];
-                });
               }];
 }
 
@@ -237,13 +245,11 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
             }
             NSDictionary *json =
                 [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            // Checking for a JSON parsing error
             if (nil != error) {
               completion(0, 0, nil, error);
               return;
             }
-            // TODO: Should check for a Flickr response error, success, fail, etc
-            //
+            // TODO: Should really check here for a Flickr response error, success, fail, etc
             if (json && [json isKindOfClass:[NSDictionary class]]) {
               NSInteger page = [[json[@"photos"] objectForKey:@"page"] integerValue];
               NSInteger pages = [[json[@"photos"] objectForKey:@"pages"] integerValue];
