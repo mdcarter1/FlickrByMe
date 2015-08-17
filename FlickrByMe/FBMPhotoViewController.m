@@ -52,10 +52,15 @@
             completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
               dispatch_async(dispatch_get_main_queue(), ^{
                 [self.activityView stopAnimating];
-                UIImage *image = [UIImage imageWithData:data];
+                UIImage *image = [self imageScaledForCurrentSizeClass:data];
                 UIViewContentMode mode = [self isTabletSizeClass]
                                              ? UIViewContentModeScaleAspectFit
                                              : UIViewContentModeScaleAspectFill;
+                if ([self isTabletSizeClass]) {
+                  [self.imageHeight setConstant:image.size.height];
+                  [self.imageWidth setConstant:image.size.width];
+                  [self.imageView setNeedsUpdateConstraints];
+                }
                 [self.imageView setContentMode:mode];
                 [self.imageView setImage:image];
                 [self.titleView setText:entry.title];
@@ -77,6 +82,16 @@
   // iPad is only iOS device that would have Regular for both horizontal and vertical
   return (UIUserInterfaceSizeClassRegular == self.traitCollection.horizontalSizeClass &&
           UIUserInterfaceSizeClassRegular == self.traitCollection.verticalSizeClass);
+}
+
+- (UIImage *)imageScaledForCurrentSizeClass:(NSData *)data
+{
+  UIImage *image = [UIImage imageWithData:data];
+  if ([self isTabletSizeClass]) {
+    CGFloat scale = MAX(image.size.width / 500, image.size.height / 500);
+    image = [UIImage imageWithData:data scale:scale];
+  }
+  return image;
 }
 
 @end
