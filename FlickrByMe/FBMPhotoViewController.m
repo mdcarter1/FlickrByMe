@@ -58,7 +58,7 @@
                                              : UIViewContentModeScaleAspectFill;
                 [self.imageView setContentMode:mode];
                 [self.imageView setImage:image];
-                [self.titleView setText:@"Title should go here!"];
+                [self.titleView setText:entry.title];
               });
             }];
 }
