@@ -63,7 +63,12 @@
                 }
                 [self.imageView setContentMode:mode];
                 [self.imageView setImage:image];
-                [self.titleView setText:entry.title];
+                // Account for empty title
+                if (!entry.title || entry.title.length == 0) {
+                  [self.titleView setText:@"No Title"];
+                } else {
+                  [self.titleView setText:entry.title];
+                }
               });
             }];
 }
