@@ -23,7 +23,7 @@
 
 - (void)viewDidLoad
 {
-  [super viewDidLoad];  
+  [super viewDidLoad];
   [self.activityView setHidesWhenStopped:YES];
   [self.activityView startAnimating];
 }
@@ -39,7 +39,6 @@
 {
   _entry = entry;
 
-  // Lazy load the photo
   NSString *urlString =
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
       [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_b.jpg",
@@ -52,7 +51,12 @@
             completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
               dispatch_async(dispatch_get_main_queue(), ^{
                 [self.activityView stopAnimating];
-                [self.imageView setImage:[UIImage imageWithData:data]];
+                UIImage *image = [UIImage imageWithData:data];
+                UIViewContentMode mode = [self isTabletSizeClass]
+                                             ? UIViewContentModeScaleAspectFit
+                                             : UIViewContentModeScaleAspectFill;
+                [self.imageView setContentMode:mode];
+                [self.imageView setImage:image];
               });
             }];
 }
@@ -62,6 +66,15 @@
 - (IBAction)done:(id)sender
 {
   [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Misc
+
+- (BOOL)isTabletSizeClass
+{
+  // iPad is only iOS device that would have Regular for both horizontal and vertical
+  return (UIUserInterfaceSizeClassRegular == self.traitCollection.horizontalSizeClass &&
+          UIUserInterfaceSizeClassRegular == self.traitCollection.verticalSizeClass);
 }
 
 @end
