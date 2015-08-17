@@ -186,16 +186,26 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
       flickrPhotosForLocation:self.currentCoordinates
                          page:self.currentPage + 1
               completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
-                // TODO: Handle the error if necessary
-                self.lastPage = pages;
-                if (page == ++self.currentPage) {
-                  // TODO: check retain cycle
+                // Would handle errors more gracefully in the real world of course...
+                if (nil != error) {
                   dispatch_async(dispatch_get_main_queue(), ^{
                     [self.refreshControl endRefreshing];
                     [self.refreshControl removeFromSuperview];
-                    // Could just call 'reloadData' here but that might be a little choppy on the
-                    // on the scroll so instead do it the right way and insert the new rows.
-                    //[self.collectionView reloadData];
+                    NSLog(@"Flickr page request error = (%@)",
+                          error.localizedDescription);
+                  });
+                  return;
+                }
+                // Always keep updating the last page since in theory it could increase
+                // while using the app
+                self.lastPage = pages;
+                if (page == ++self.currentPage) {
+                  dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.refreshControl endRefreshing];
+                    [self.refreshControl removeFromSuperview];
+                    // Could just call '[self.collectionView reloadData]' here but that might be a
+                    // little choppy on the on the scroll so instead do it the right way and insert
+                    // the new rows
                     [self.collectionView performBatchUpdates:^{
                       NSUInteger resultsSize = [self.photoEntries count];
                       [self.photoEntries addObjectsFromArray:photos];
@@ -208,7 +218,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
                   });
                 } else {
                   // Uh oh!
-                  NSAssert(YES, @"Uh oh we are adding the same page twice!");
+                  NSAssert(NO, @"Uh oh we are adding the same page twice!");
                 }
               }];
 }
