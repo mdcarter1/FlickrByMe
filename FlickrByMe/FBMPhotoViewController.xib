@@ -12,6 +12,7 @@
                 <outlet property="imageHeight" destination="a0b-39-qPN" id="M4A-7A-WOa"/>
                 <outlet property="imageView" destination="eNB-ai-Kxa" id="ech-4C-t3U"/>
                 <outlet property="imageWidth" destination="odG-PU-mIO" id="ywo-1p-4cp"/>
+                <outlet property="titleView" destination="Vj3-j7-KvJ" id="GjF-jN-dkC"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
         </placeholder>
@@ -51,14 +52,25 @@
                         <action selector="done:" destination="-1" eventType="touchUpInside" id="xga-4u-yx2"/>
                     </connections>
                 </button>
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vj3-j7-KvJ">
+                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="textColor" red="0.10588235294117647" green="0.21568627450980393" blue="0.79607843137254897" alpha="1" colorSpace="calibratedRGB"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                    <textInputTraits key="textInputTraits"/>
+                </textView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="bottom" id="91e-9y-axM"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="bottom" secondItem="eNB-ai-Kxa" secondAttribute="top" constant="-20" id="JcK-DK-FVz"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="bottom" secondItem="Vj3-j7-KvJ" secondAttribute="top" id="LF8-Fj-Tke"/>
+                <constraint firstAttribute="bottom" secondItem="Vj3-j7-KvJ" secondAttribute="bottom" constant="20" symbolic="YES" id="MKN-4b-aH9"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" constant="8" id="RqY-67-xq7"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="topMargin" id="Trq-bS-zVg"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="centerY" secondItem="Q52-A6-xGG" secondAttribute="centerY" id="W7A-B5-T95"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="leading" secondItem="Vj3-j7-KvJ" secondAttribute="leading" id="WMz-40-lmX"/>
+                <constraint firstItem="eNB-ai-Kxa" firstAttribute="trailing" secondItem="Vj3-j7-KvJ" secondAttribute="trailing" id="XND-99-5DI"/>
                 <constraint firstAttribute="centerX" secondItem="eNB-ai-Kxa" secondAttribute="centerX" id="YKN-db-PH7"/>
                 <constraint firstItem="eNB-ai-Kxa" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="ap2-vm-gzz"/>
                 <constraint firstItem="nb4-MH-uLz" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" constant="8" id="aqy-Nq-EUW"/>
@@ -74,31 +86,45 @@
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="Vj3-j7-KvJ"/>
+                </mask>
                 <mask key="constraints">
-                    <exclude reference="W7A-B5-T95"/>
-                    <exclude reference="YKN-db-PH7"/>
-                    <exclude reference="fug-uz-3yz"/>
-                    <exclude reference="tVJ-zg-rQE"/>
                     <exclude reference="JcK-DK-FVz"/>
                     <exclude reference="RqY-67-xq7"/>
                     <exclude reference="Trq-bS-zVg"/>
                     <exclude reference="aqy-Nq-EUW"/>
                     <exclude reference="l8n-XA-k79"/>
+                    <exclude reference="LF8-Fj-Tke"/>
+                    <exclude reference="W7A-B5-T95"/>
+                    <exclude reference="WMz-40-lmX"/>
+                    <exclude reference="XND-99-5DI"/>
+                    <exclude reference="YKN-db-PH7"/>
+                    <exclude reference="fug-uz-3yz"/>
+                    <exclude reference="tVJ-zg-rQE"/>
+                    <exclude reference="MKN-4b-aH9"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=regular">
+                <mask key="subviews">
+                    <include reference="Vj3-j7-KvJ"/>
+                </mask>
                 <mask key="constraints">
+                    <include reference="JcK-DK-FVz"/>
                     <exclude reference="91e-9y-axM"/>
+                    <include reference="LF8-Fj-Tke"/>
                     <include reference="W7A-B5-T95"/>
+                    <include reference="WMz-40-lmX"/>
+                    <include reference="XND-99-5DI"/>
                     <include reference="YKN-db-PH7"/>
                     <exclude reference="ap2-vm-gzz"/>
                     <exclude reference="cJG-Nb-S3Y"/>
                     <exclude reference="fug-uz-3yz"/>
                     <include reference="tVJ-zg-rQE"/>
                     <exclude reference="uiG-Dv-fe1"/>
-                    <include reference="JcK-DK-FVz"/>
                     <exclude reference="mB9-5x-5hm"/>
                     <exclude reference="olt-K3-uVs"/>
+                    <include reference="MKN-4b-aH9"/>
                 </mask>
             </variation>
         </view>

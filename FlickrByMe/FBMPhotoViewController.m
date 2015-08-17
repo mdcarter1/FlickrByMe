@@ -16,6 +16,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageHeight;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *imageWidth;
+@property (weak, nonatomic) IBOutlet UITextView *titleView;
 
 @end
 
@@ -57,6 +58,7 @@
                                              : UIViewContentModeScaleAspectFill;
                 [self.imageView setContentMode:mode];
                 [self.imageView setImage:image];
+                [self.titleView setText:@"Title should go here!"];
               });
             }];
 }
