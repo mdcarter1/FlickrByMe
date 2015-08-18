@@ -2,7 +2,7 @@
 //  FBMLaunchViewController.m
 //  FlickrByMe
 //
-//  Created by Mike Carter (Old) on 8/17/15.
+//  Created by Mike Carter on 8/17/15.
 //  Copyright (c) 2015 Mike Carter. All rights reserved.
 //
 
@@ -10,10 +10,11 @@
 
 @interface FBMLaunchViewController ()
 
-@property (weak, nonatomic) IBOutlet UIView *pinkCircle;
-@property (weak, nonatomic) IBOutlet UIView *blueCircle;
 @property (weak, nonatomic) IBOutlet UIButton *startButton;
-@property (weak, nonatomic) IBOutlet UILabel *titleLabel;
+
+@property (strong, nonatomic) UIView  *pinkCircle;
+@property (strong, nonatomic) UIView  *blueCircle;
+@property (strong, nonatomic) UILabel *titleLabel;
 
 @property (assign, nonatomic) CGPoint offscreenLeft;
 @property (assign, nonatomic) CGPoint offscreenRight;
@@ -24,34 +25,50 @@
 
 @implementation FBMLaunchViewController
 
-static const CGFloat circleSize = 150;
-static const CGFloat circleHalfSize = circleSize/2;
-static const CGFloat circleOverlap = 20;
-
+static const CGFloat kCircleSize = 150;
+static const CGFloat kCircleHalfSize = kCircleSize / 2;
+static const CGFloat kCircleOverlap = 5;
+static const CGFloat kTitleLabelWidth = 225;
+static const CGFloat kTitleLabelHeight = 50;
+static const CGFloat kStartButtonWidth = 200;
+static const CGFloat kStartButtonHeight = 30;
 
 - (void)viewDidLoad
 {
   [super viewDidLoad];
 
+  CGSize rootSize = self.view.frame.size;
+  CGPoint rootCenter = self.view.center;
 
-  self.offscreenLeft = CGPointMake(-circleHalfSize, self.view.center.y);
-  self.offscreenRight = CGPointMake(self.view.frame.size.width + circleHalfSize, self.view.center.y);
-  self.onscreenLeft = CGPointMake(self.view.center.x - circleHalfSize, self.view.center.y);
-  self.onscreenRight = CGPointMake(self.view.center.x + circleHalfSize, self.view.center.y);
+  self.offscreenLeft = CGPointMake(-kCircleHalfSize, rootCenter.y);
+  self.offscreenRight = CGPointMake(rootSize.width + kCircleHalfSize, rootCenter.y);
+  self.onscreenLeft = CGPointMake(rootCenter.x - kCircleHalfSize + kCircleOverlap, rootCenter.y);
+  self.onscreenRight = CGPointMake(rootCenter.x + kCircleHalfSize - kCircleOverlap, rootCenter.y);
 
   // Make some circles
-  self.pinkCircle.layer.cornerRadius = 75;
-  self.blueCircle.layer.cornerRadius = 75;
-
-  self.blueCircle.frame = CGRectMake(0, 0, 150, 150);
-  self.blueCircle.center = self.offscreenRight;
-
-  self.pinkCircle.frame = CGRectMake(0, 0, 150, 150);
+  self.pinkCircle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kCircleSize, kCircleSize)];
+  self.pinkCircle.backgroundColor =
+      [UIColor colorWithRed:222.0f / 225.0f green:53.0f / 225.0f blue:134.0f / 225.0f alpha:1.0f];
+  self.pinkCircle.layer.cornerRadius = kCircleSize / 2;
   self.pinkCircle.center = self.offscreenLeft;
+  [self.view addSubview:self.pinkCircle];
 
-  self.titleLabel.frame =
-      CGRectMake(self.view.center.x - self.titleLabel.frame.size.width / 2,
-                 self.view.center.y - self.titleLabel.frame.size.height / 2, 225, 50);
+  self.blueCircle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kCircleSize, kCircleSize)];
+  self.blueCircle.backgroundColor =
+      [UIColor colorWithRed:27.0f / 225.0f green:23.0f / 225.0f blue:198.0f / 225.0f alpha:1.0f];
+  self.blueCircle.layer.cornerRadius = kCircleSize / 2;
+  self.blueCircle.center = self.offscreenRight;
+  [self.view addSubview:self.blueCircle];
+
+  self.titleLabel =
+      [[UILabel alloc] initWithFrame:CGRectMake(self.view.center.x - kTitleLabelWidth / 2,
+                                                self.view.center.y - kTitleLabelHeight / 2,
+                                                kTitleLabelWidth, kTitleLabelHeight)];
+  self.titleLabel.text = @"FlickrByMe";
+  self.titleLabel.font = [UIFont systemFontOfSize:42];
+  self.titleLabel.textColor = [UIColor whiteColor];
+  [self.view addSubview:self.titleLabel];
+
 
   [UIView animateWithDuration:1.0
       delay:0
@@ -73,8 +90,8 @@ static const CGFloat circleOverlap = 20;
 
   self.startButton.layer.cornerRadius = 10;
   self.startButton.alpha = 0;
-  self.startButton.frame = CGRectMake(self.view.center.x - self.startButton.frame.size.width / 2,
-                                      self.view.frame.size.height - 50, 200, 30);
+  self.startButton.frame = CGRectMake(rootCenter.x - kStartButtonWidth / 2, rootSize.height - 50,
+                                      kStartButtonWidth, kStartButtonHeight);
 }
 
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
@@ -89,8 +106,8 @@ static const CGFloat circleOverlap = 20;
       delay:0
       options:(UIViewAnimationOptionCurveEaseInOut)
       animations:^{
-        self.blueCircle.center = self.offscreenLeft;
-        self.pinkCircle.center = self.offscreenRight;
+        self.blueCircle.center = self.offscreenRight;
+        self.pinkCircle.center = self.offscreenLeft;
       }
       completion:^(BOOL finished) {
         [self performSegueWithIdentifier:@"FlickrPhotoSearch" sender:self];

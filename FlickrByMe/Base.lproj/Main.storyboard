@@ -25,31 +25,11 @@
                                     <segue destination="4tY-D3-y5S" kind="modal" identifier="FlickrPhotoSearch" id="7LO-3c-2uJ"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" id="syu-Mr-Kde">
-                                <rect key="frame" x="60" y="209" width="150" height="150"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.10588235294117647" green="0.21568627450980393" blue="0.79607843137254897" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" id="Adv-ZH-cJT">
-                                <rect key="frame" x="135" y="209" width="150" height="150"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.87058823529411766" green="0.0" blue="0.37647058823529411" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="flickrByMe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HOl-sV-Ra3">
-                                <rect key="frame" x="60" y="141" width="225" height="50"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="42"/>
-                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
-                        <outlet property="blueCircle" destination="syu-Mr-Kde" id="oBW-Bt-ttX"/>
-                        <outlet property="pinkCircle" destination="Adv-ZH-cJT" id="DnX-zE-MkU"/>
                         <outlet property="startButton" destination="Fxn-bv-mMX" id="kyC-R0-bMW"/>
-                        <outlet property="titleLabel" destination="HOl-sV-Ra3" id="Gjp-4q-XSP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -72,7 +52,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="FlickrPhotoCell" id="KNn-0z-2g6" customClass="FBMPhotoCell">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                <rect key="frame" x="10" y="10" width="90" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
