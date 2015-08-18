@@ -29,7 +29,7 @@ static CGFloat const kCircleSize = 150;
 static CGFloat const kCircleHalfSize = kCircleSize / 2;
 static CGFloat const kCircleOverlap = 5;
 static CGFloat const kTitleLabelWidth = 225;
-static CGFloat const kTitleLabelHeight = 50;
+static CGFloat const kTitleLabelHeight = 80;
 static CGFloat const kStartButtonWidth = 200;
 static CGFloat const kStartButtonHeight = 30;
 
@@ -62,11 +62,13 @@ static CGFloat const kStartButtonHeight = 30;
 
   self.titleLabel =
       [[UILabel alloc] initWithFrame:CGRectMake(self.view.center.x - kTitleLabelWidth / 2,
-                                                self.view.center.y - kTitleLabelHeight / 2,
+                                                self.view.center.y + kCircleHalfSize,
                                                 kTitleLabelWidth, kTitleLabelHeight)];
   self.titleLabel.text = @"FlickrByMe";
-  self.titleLabel.font = [UIFont systemFontOfSize:42];
-  self.titleLabel.textColor = [UIColor whiteColor];
+  self.titleLabel.textAlignment = NSTextAlignmentCenter;
+  self.titleLabel.font = [UIFont fontWithName:@"Noteworthy" size:42];
+  self.titleLabel.textColor = [UIColor blackColor];
+  self.titleLabel.alpha = 0.0;
   [self.view addSubview:self.titleLabel];
 
 
@@ -83,6 +85,7 @@ static CGFloat const kStartButtonHeight = 30;
             options:(UIViewAnimationOptionCurveLinear)
             animations:^{
               self.startButton.alpha = 1.0;
+              self.titleLabel.alpha = 1.0;
             }
             completion:^(BOOL finished){
             }];
