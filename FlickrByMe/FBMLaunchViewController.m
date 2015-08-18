@@ -93,6 +93,7 @@ static CGFloat const kStartButtonHeight = 30;
 
   self.startButton.layer.cornerRadius = 10;
   self.startButton.alpha = 0;
+  self.startButton.backgroundColor = [UIColor blackColor];
   self.startButton.frame = CGRectMake(rootCenter.x - kStartButtonWidth / 2, rootSize.height - 50,
                                       kStartButtonWidth, kStartButtonHeight);
 }
