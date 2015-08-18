@@ -17,6 +17,11 @@ typedef void (^FBMPhotoThumbImageBlock)(UIImage *image);
 
 @interface FBMFlickrPhotoLoader : NSObject
 
+/**
+ *  Used for retrieving a single page of Photos from the Flickr REST API.  If succesful
+ *  a non-nil photos array will be returned.  In the case of error the array will be nil
+ * and the page count and index will have a -1 value.
+ */
 - (void)photosForLocation:(CLLocationCoordinate2D)location
                      page:(NSInteger)page
           completionBlock:(FBMPhotoPageBlock)completion;
