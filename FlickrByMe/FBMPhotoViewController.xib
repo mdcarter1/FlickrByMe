@@ -8,6 +8,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FBMPhotoViewController">
             <connections>
                 <outlet property="activityView" destination="Q52-A6-xGG" id="y5x-xr-3od"/>
+                <outlet property="borderView" destination="K6k-n0-OP5" id="Ikm-Co-5FL"/>
                 <outlet property="doneButton" destination="nb4-MH-uLz" id="J2G-ts-z1v"/>
                 <outlet property="imageHeight" destination="a0b-39-qPN" id="M4A-7A-WOa"/>
                 <outlet property="imageView" destination="eNB-ai-Kxa" id="ech-4C-t3U"/>
@@ -21,11 +22,11 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K6k-n0-OP5" userLabel="Border">
+                <imageView userInteractionEnabled="NO" alpha="0.0" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K6k-n0-OP5" userLabel="Border">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eNB-ai-Kxa" userLabel="Photo">
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" alpha="0.0" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="eNB-ai-Kxa" userLabel="Photo">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="500" id="a0b-39-qPN"/>
@@ -56,7 +57,7 @@
                         <action selector="done:" destination="-1" eventType="touchUpInside" id="xga-4u-yx2"/>
                     </connections>
                 </button>
-                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vj3-j7-KvJ" userLabel="Title">
+                <textView clipsSubviews="YES" multipleTouchEnabled="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vj3-j7-KvJ" userLabel="Title">
                     <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <fontDescription key="fontDescription" name="Noteworthy-Light" family="Noteworthy" pointSize="18"/>
@@ -110,15 +111,11 @@
                     <exclude reference="Vj3-j7-KvJ"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="JcK-DK-FVz"/>
-                    <exclude reference="RqY-67-xq7"/>
-                    <exclude reference="Trq-bS-zVg"/>
-                    <exclude reference="aqy-Nq-EUW"/>
-                    <exclude reference="l8n-XA-k79"/>
                     <exclude reference="BG1-eQ-6uS"/>
                     <exclude reference="GfT-Pn-tQe"/>
                     <exclude reference="Tme-Ha-auW"/>
                     <exclude reference="cYp-pL-0C4"/>
+                    <exclude reference="MKN-4b-aH9"/>
                     <exclude reference="LF8-Fj-Tke"/>
                     <exclude reference="W7A-B5-T95"/>
                     <exclude reference="WMz-40-lmX"/>
@@ -126,7 +123,11 @@
                     <exclude reference="YKN-db-PH7"/>
                     <exclude reference="fug-uz-3yz"/>
                     <exclude reference="tVJ-zg-rQE"/>
-                    <exclude reference="MKN-4b-aH9"/>
+                    <exclude reference="JcK-DK-FVz"/>
+                    <exclude reference="RqY-67-xq7"/>
+                    <exclude reference="Trq-bS-zVg"/>
+                    <exclude reference="aqy-Nq-EUW"/>
+                    <exclude reference="l8n-XA-k79"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=regular">
@@ -135,11 +136,11 @@
                     <include reference="Vj3-j7-KvJ"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="JcK-DK-FVz"/>
                     <include reference="BG1-eQ-6uS"/>
                     <include reference="GfT-Pn-tQe"/>
                     <include reference="Tme-Ha-auW"/>
                     <include reference="cYp-pL-0C4"/>
+                    <include reference="MKN-4b-aH9"/>
                     <exclude reference="91e-9y-axM"/>
                     <include reference="LF8-Fj-Tke"/>
                     <include reference="W7A-B5-T95"/>
@@ -151,9 +152,9 @@
                     <exclude reference="fug-uz-3yz"/>
                     <include reference="tVJ-zg-rQE"/>
                     <exclude reference="uiG-Dv-fe1"/>
+                    <include reference="JcK-DK-FVz"/>
                     <exclude reference="mB9-5x-5hm"/>
                     <exclude reference="olt-K3-uVs"/>
-                    <include reference="MKN-4b-aH9"/>
                 </mask>
             </variation>
         </view>

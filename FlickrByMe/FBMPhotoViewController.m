@@ -11,6 +11,7 @@
 
 @interface FBMPhotoViewController ()
 
+@property (weak, nonatomic) IBOutlet UIImageView *borderView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *activityView;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
@@ -65,10 +66,22 @@
                 [self.imageView setImage:image];
                 // Account for empty title
                 if (!photo.title || photo.title.length == 0) {
-                  [self.titleView setText:@"No Title"];
+                  [self.titleView setText:@"Untitled"];
                 } else {
                   [self.titleView setText:photo.title];
                 }
+                // This will smooth the presentation so we don't get a hard pop when the images
+                // are show drawn
+                [UIView animateWithDuration:1
+                    delay:0
+                    options:(UIViewAnimationOptionCurveLinear)
+                    animations:^{
+                      self.borderView.alpha = 1.0;
+                      self.imageView.alpha = 1.0;
+                      self.titleView.alpha = 1.0;
+                    }
+                    completion:^(BOOL finished){
+                    }];
               });
             }];
 }
