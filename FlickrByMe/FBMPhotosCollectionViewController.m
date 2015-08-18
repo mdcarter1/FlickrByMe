@@ -7,17 +7,17 @@
 //
 
 #import "FBMPhotosCollectionViewController.h"
-#import "FBMPhotoEntry.h"
+#import "FBMFlickrPhoto.h"
 #import "FBMPhotoCell.h"
 #import "FBMPhotoViewController.h"
-#import "FBMFlickrModel.h"
+#import "FBMFlickrPhotoLoader.h"
 #import <MapKit/MapKit.h>
 
 
 @interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate,
                                                  UICollectionViewDelegateFlowLayout>
 
-@property (nonatomic, strong) FBMFlickrModel         *model;
+@property (nonatomic, strong) FBMFlickrPhotoLoader   *photoLoader;
 @property (nonatomic, strong) NSMutableArray         *photoEntries;
 @property (nonatomic, strong) NSCache                *photoCache;
 @property (nonatomic, strong) NSOperationQueue       *photoOpQueue;
@@ -31,7 +31,7 @@
 
 @implementation FBMPhotosCollectionViewController
 
-static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
+static NSString *const reuseIdentifier = @"FlickrPhotoCell";
 
 #pragma mark - Overriden Methods
 
@@ -58,7 +58,7 @@ static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
   self.lastPage = 0;
 
   self.photoEntries = [NSMutableArray new];
-  self.model = [FBMFlickrModel new];
+  self.photoLoader = [FBMFlickrPhotoLoader new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -89,17 +89,17 @@ static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
   FBMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                  forIndexPath:indexPath];
 
-  FBMPhotoEntry *entry = [self.photoEntries objectAtIndex:indexPath.row];
+  FBMFlickrPhoto *photo = [self.photoEntries objectAtIndex:indexPath.row];
 
-  UIImage *cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
+  UIImage *cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:photo.photoId]];
   if (cachedPhoto) {
     [cell.imageView setImage:cachedPhoto];
   } else {
-    [cell loadForPhoto:entry
+    [cell loadForPhoto:photo
                   queue:self.photoOpQueue
         completionBlock:^(UIImage *image) {
           // Add it to the cache so we can be speedy...
-          [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:entry.photoId]];
+          [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:photo.photoId]];
         }];
   }
   return cell;
@@ -122,14 +122,14 @@ static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
   didEndDisplayingCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  [((FBMPhotoCell*)cell) cancelLoad];
+  [((FBMPhotoCell *)cell)cancelLoad];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
     didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
   FBMPhotoViewController *vc = [FBMPhotoViewController new];
-  [vc setEntry:self.photoEntries[indexPath.row]];
+  [vc setPhoto:self.photoEntries[indexPath.row]];
   [self presentViewController:vc animated:YES completion:nil];
 }
 
@@ -164,7 +164,7 @@ static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
 
 - (void)loadMorePhotos
 {
-  [self.model
+  [self.photoLoader
       photosForLocation:self.currentCoordinates
                    page:self.currentPage + 1
         completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {

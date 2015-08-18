@@ -11,7 +11,7 @@
 
 typedef void (^FBMPhotoPageBlock)(NSInteger pages, NSInteger page, NSArray *photos,
                                                   NSError *error);
-@interface FBMFlickrModel : NSObject
+@interface FBMFlickrPhotoLoader : NSObject
 
 - (void)photosForLocation:(CLLocationCoordinate2D)location
                      page:(NSInteger)page

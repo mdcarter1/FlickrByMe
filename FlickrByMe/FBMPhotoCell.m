@@ -7,7 +7,7 @@
 //
 
 #import "FBMPhotoCell.h"
-#import "FBMPhotoEntry.h"
+#import "FBMFlickrPhoto.h"
 
 @interface FBMPhotoCell ()
 
@@ -30,7 +30,7 @@
   [self cancelLoad];
 }
 
-- (void)loadForPhoto:(FBMPhotoEntry *)entry
+- (void)loadForPhoto:(FBMFlickrPhoto *)photo
                queue:(NSOperationQueue *)queue
      completionBlock:(FBMPhotoCellLoadedBlock)completion
 {
@@ -38,8 +38,8 @@
     NSString *urlString =
         // Got this here: https://www.flickr.com/services/api/misc.urls.html
         [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_t.jpg",
-                                   (long)entry.farm, (long)entry.server, entry.photoId,
-                                   entry.secret];
+                                   (long)photo.farm, (long)photo.server, photo.photoId,
+                                   photo.secret];
 
     NSError *error;
     NSURLResponse *response;

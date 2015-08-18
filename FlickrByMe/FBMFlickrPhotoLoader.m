@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 Mike Carter. All rights reserved.
 //
 
-#import "FBMFlickrModel.h"
-#import "FBMPhotoEntry.h"
+#import "FBMFlickrPhotoLoader.h"
+#import "FBMFlickrPhoto.h"
 
-@implementation FBMFlickrModel
+@implementation FBMFlickrPhotoLoader
 
 static NSInteger const flickrPhotosPerPage = 50;
 static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
@@ -48,7 +48,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
               if (photos && ([photos isKindOfClass:[NSArray class]])) {
                 NSMutableArray *photoEntries = [NSMutableArray new];
                 for (NSDictionary *temp in photos) {
-                  [photoEntries addObject:[[FBMPhotoEntry alloc] initWithPhotoDictionary:temp]];
+                  [photoEntries addObject:[[FBMFlickrPhoto alloc] initWithPhotoDictionary:temp]];
                 }
                 completion(pages, page, photoEntries, error);
                 return;

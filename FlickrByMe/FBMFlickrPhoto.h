@@ -1,5 +1,5 @@
 //
-//  FBMPhotoEntry.h
+//  FBMFlickrPhoto.h
 //  FlickrByMe
 //
 //  Created by Mike Carter on 8/12/15.
@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface FBMPhotoEntry : NSObject
+@interface FBMFlickrPhoto : NSObject
 
 @property (nonatomic, copy  ) NSString  *title;
 @property (nonatomic, copy  ) NSString  *secret;

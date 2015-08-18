@@ -7,7 +7,7 @@
 //
 
 #import "FBMPhotoViewController.h"
-#import "FBMPhotoEntry.h"
+#import "FBMFlickrPhoto.h"
 
 @interface FBMPhotoViewController ()
 
@@ -36,14 +36,14 @@
 
 #pragma mark - Property Overrides
 
-- (void)setEntry:(FBMPhotoEntry *)entry
+- (void)setPhoto:(FBMFlickrPhoto *)photo
 {
-  _entry = entry;
+  _photo = photo;
 
   NSString *urlString =
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
       [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_b.jpg",
-                                 (long)entry.farm, (long)entry.server, entry.photoId, entry.secret];
+                                 (long)photo.farm, (long)photo.server, photo.photoId, photo.secret];
 
   NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
   [NSURLConnection
@@ -64,10 +64,10 @@
                 [self.imageView setContentMode:mode];
                 [self.imageView setImage:image];
                 // Account for empty title
-                if (!entry.title || entry.title.length == 0) {
+                if (!photo.title || photo.title.length == 0) {
                   [self.titleView setText:@"No Title"];
                 } else {
-                  [self.titleView setText:entry.title];
+                  [self.titleView setText:photo.title];
                 }
               });
             }];

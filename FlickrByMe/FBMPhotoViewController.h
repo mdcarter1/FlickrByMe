@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class FBMPhotoEntry;
+@class FBMFlickrPhoto;
 
 @interface FBMPhotoViewController : UIViewController
 
-@property (nonatomic, strong) FBMPhotoEntry* entry;
+@property (nonatomic, strong) FBMFlickrPhoto* photo;
 
 @end

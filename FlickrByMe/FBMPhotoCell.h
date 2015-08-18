@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class FBMPhotoEntry;
+@class FBMFlickrPhoto;
 
 typedef void (^FBMPhotoCellLoadedBlock)(UIImage *image);
 
@@ -16,7 +16,7 @@ typedef void (^FBMPhotoCellLoadedBlock)(UIImage *image);
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
-- (void)loadForPhoto:(FBMPhotoEntry *)entry
+- (void)loadForPhoto:(FBMFlickrPhoto *)photo
                queue:(NSOperationQueue *)queue
      completionBlock:(FBMPhotoCellLoadedBlock)completion;
 
