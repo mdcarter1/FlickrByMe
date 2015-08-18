@@ -98,6 +98,14 @@ static CGFloat const kStartButtonHeight = 30;
                                       kStartButtonWidth, kStartButtonHeight);
 }
 
+- (BOOL)shouldAutorotate
+{
+  // Disallowing rotation for this excercise. In real world I would
+  // move the layout code out of viewDidLoad so we could reposition
+  // everything
+  return NO;
+}
+
 - (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
 {
   // Not doing segueue to give my exit animations time to play out
