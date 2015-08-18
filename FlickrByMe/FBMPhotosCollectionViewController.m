@@ -94,10 +94,12 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
                          if (newCell) {
                            [newCell.imageView setImage:image];
                          } else {
-                           // If wanted to we could look into doing something more sophisticated
-                           // for canceling any zombie block BEFORE they execute.  This is not
-                           // really an issue until you really start fast scrolling
-                           NSLog(@"Zombie image fetch block!");
+                           // We could look into doing something more sophisticated
+                           // for canceling any orphaned block BEFORE they execute.  This is not
+                           // really an issue until you really start fast scrolling.  On the other
+                           // hand these orphaned blocks are filling up the cache for us so if the
+                           // user backs up the collection they are going to get a fast response.
+                           // NSLog(@"Orphaned image fetch block!");
                          }
                        }];
   return cell;
