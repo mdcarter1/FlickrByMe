@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" initialViewController="BYZ-38-t0r">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Launch View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
-                    </layoutGuides>
+                <viewController id="BYZ-38-t0r" customClass="FBMLaunchViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Fxn-bv-mMX">
-                                <rect key="frame" x="200" y="550" width="200" height="30"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="200" id="egs-ba-biK"/>
-                                </constraints>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Fxn-bv-mMX">
+                                <rect key="frame" x="60" y="518" width="200" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.1058823529" green="0.2156862745" blue="0.79607843140000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <state key="normal" title="Let's Get Started!">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="4tY-D3-y5S" kind="show" id="7LO-3c-2uJ"/>
+                                    <action selector="startFlickrSearch:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aQX-uQ-E9R"/>
+                                    <segue destination="4tY-D3-y5S" kind="modal" identifier="FlickrPhotoSearch" id="7LO-3c-2uJ"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" id="syu-Mr-Kde">
+                                <rect key="frame" x="60" y="209" width="150" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.10588235294117647" green="0.21568627450980393" blue="0.79607843137254897" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <view contentMode="scaleToFill" id="Adv-ZH-cJT">
+                                <rect key="frame" x="135" y="209" width="150" height="150"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.87058823529411766" green="0.0" blue="0.37647058823529411" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="flickrByMe" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HOl-sV-Ra3">
+                                <rect key="frame" x="60" y="141" width="225" height="50"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="42"/>
+                                <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstAttribute="bottom" secondItem="Fxn-bv-mMX" secondAttribute="bottom" constant="20" symbolic="YES" id="9uH-Vl-KMR"/>
-                            <constraint firstItem="Fxn-bv-mMX" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="rUg-RS-6yN"/>
-                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="blueCircle" destination="syu-Mr-Kde" id="oBW-Bt-ttX"/>
+                        <outlet property="pinkCircle" destination="Adv-ZH-cJT" id="DnX-zE-MkU"/>
+                        <outlet property="startButton" destination="Fxn-bv-mMX" id="kyC-R0-bMW"/>
+                        <outlet property="titleLabel" destination="HOl-sV-Ra3" id="Gjp-4q-XSP"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="286" y="355"/>
+            <point key="canvasLocation" x="91" y="336"/>
         </scene>
         <!--FlickrByMe-->
         <scene sceneID="X4b-SD-FpJ">
             <objects>
                 <collectionViewController id="pvX-rr-OeP" customClass="FBMPhotosCollectionViewController" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" dataMode="prototypes" id="CD4-f0-zHf">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="e9H-ry-VKA">
@@ -62,19 +78,14 @@
                                     <rect key="frame" x="0.0" y="0.0" width="90" height="90"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bf4-9w-GMm">
+                                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Bf4-9w-GMm">
                                             <rect key="frame" x="5" y="5" width="80" height="80"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="Bf4-9w-GMm" secondAttribute="bottom" constant="5" id="KZt-Ci-6rm"/>
-                                    <constraint firstItem="Bf4-9w-GMm" firstAttribute="top" secondItem="KNn-0z-2g6" secondAttribute="top" constant="5" id="Lzu-mB-XhL"/>
-                                    <constraint firstAttribute="trailing" secondItem="Bf4-9w-GMm" secondAttribute="trailing" constant="5" id="nMf-HH-SZZ"/>
-                                    <constraint firstItem="Bf4-9w-GMm" firstAttribute="leading" secondItem="KNn-0z-2g6" secondAttribute="leading" constant="5" id="uKx-DL-z0w"/>
-                                </constraints>
                                 <connections>
                                     <outlet property="imageView" destination="Bf4-9w-GMm" id="rjr-ty-S6a"/>
                                 </connections>
@@ -89,7 +100,7 @@
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="T5Q-zI-XNn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1665" y="355"/>
+            <point key="canvasLocation" x="963" y="336"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="ZNk-m6-zfL">
@@ -107,7 +118,12 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="wfW-bH-PIq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="977" y="355"/>
+            <point key="canvasLocation" x="521.06666666666661" y="336.06666666666666"/>
         </scene>
     </scenes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
 </document>

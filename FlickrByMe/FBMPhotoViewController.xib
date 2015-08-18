@@ -90,11 +90,7 @@
                     <exclude reference="Vj3-j7-KvJ"/>
                 </mask>
                 <mask key="constraints">
-                    <exclude reference="JcK-DK-FVz"/>
-                    <exclude reference="RqY-67-xq7"/>
-                    <exclude reference="Trq-bS-zVg"/>
-                    <exclude reference="aqy-Nq-EUW"/>
-                    <exclude reference="l8n-XA-k79"/>
+                    <exclude reference="MKN-4b-aH9"/>
                     <exclude reference="LF8-Fj-Tke"/>
                     <exclude reference="W7A-B5-T95"/>
                     <exclude reference="WMz-40-lmX"/>
@@ -102,7 +98,11 @@
                     <exclude reference="YKN-db-PH7"/>
                     <exclude reference="fug-uz-3yz"/>
                     <exclude reference="tVJ-zg-rQE"/>
-                    <exclude reference="MKN-4b-aH9"/>
+                    <exclude reference="JcK-DK-FVz"/>
+                    <exclude reference="RqY-67-xq7"/>
+                    <exclude reference="Trq-bS-zVg"/>
+                    <exclude reference="aqy-Nq-EUW"/>
+                    <exclude reference="l8n-XA-k79"/>
                 </mask>
             </variation>
             <variation key="heightClass=regular-widthClass=regular">
@@ -110,7 +110,7 @@
                     <include reference="Vj3-j7-KvJ"/>
                 </mask>
                 <mask key="constraints">
-                    <include reference="JcK-DK-FVz"/>
+                    <include reference="MKN-4b-aH9"/>
                     <exclude reference="91e-9y-axM"/>
                     <include reference="LF8-Fj-Tke"/>
                     <include reference="W7A-B5-T95"/>
@@ -122,9 +122,9 @@
                     <exclude reference="fug-uz-3yz"/>
                     <include reference="tVJ-zg-rQE"/>
                     <exclude reference="uiG-Dv-fe1"/>
+                    <include reference="JcK-DK-FVz"/>
                     <exclude reference="mB9-5x-5hm"/>
                     <exclude reference="olt-K3-uVs"/>
-                    <include reference="MKN-4b-aH9"/>
                 </mask>
             </variation>
         </view>
