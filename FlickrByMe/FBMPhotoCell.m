@@ -37,7 +37,7 @@
   self.operation = [NSBlockOperation blockOperationWithBlock:^{
     NSString *urlString =
         // Got this here: https://www.flickr.com/services/api/misc.urls.html
-        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_t.jpg",
+        [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_m.jpg",
                                    (long)photo.farm, (long)photo.server, photo.photoId,
                                    photo.secret];
 
