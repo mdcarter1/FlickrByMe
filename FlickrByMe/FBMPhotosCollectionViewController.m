@@ -10,12 +10,14 @@
 #import "FBMPhotoEntry.h"
 #import "FBMPhotoCell.h"
 #import "FBMPhotoViewController.h"
+#import "FBMFlickrModel.h"
 #import <MapKit/MapKit.h>
 
 
 @interface FBMPhotosCollectionViewController () <CLLocationManagerDelegate,
                                                  UICollectionViewDelegateFlowLayout>
 
+@property (nonatomic, strong) FBMFlickrModel         *model;
 @property (nonatomic, strong) NSMutableArray         *photoEntries;
 @property (nonatomic, strong) NSCache                *photoCache;
 @property (nonatomic, strong) NSOperationQueue       *photoOpQueue;
@@ -29,12 +31,7 @@
 
 @implementation FBMPhotosCollectionViewController
 
-static NSInteger  const flickrPhotosPerPage = 50;
-static NSString * const flickrAppKey         = @"58113b676ebff68e3c1c05f58c8a8cf7";
 static NSString * const reuseIdentifier      = @"FlickrPhotoCell";
-
-typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger page, NSArray *photos,
-                                                  NSError *error);
 
 #pragma mark - Overriden Methods
 
@@ -61,6 +58,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   self.lastPage = 0;
 
   self.photoEntries = [NSMutableArray new];
+  self.model = [FBMFlickrModel new];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -116,7 +114,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   // So to support pagination if we are displaying the last cell and we know there is more
   // pages still available on Flickr go ahead and request the next page
   if ((indexPath.row == [self.photoEntries count] - 1) && (self.currentPage < self.lastPage)) {
-    [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
+    [self loadMorePhotos];
   }
 }
 
@@ -124,7 +122,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   didEndDisplayingCell:(UICollectionViewCell *)cell
     forItemAtIndexPath:(NSIndexPath *)indexPath
 {
-  //[((FBMPhotoCell*)cell) cancelLoadThumb];
+  [((FBMPhotoCell*)cell) cancelLoad];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -159,95 +157,50 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   [self.locationManager stopUpdatingLocation];
 
   self.currentCoordinates = [(CLLocation *)[locations lastObject] coordinate];
-  [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
+  [self loadMorePhotos];
 }
 
 #pragma mark - Flickr
 
-- (void)addPhotoPageForLocation:(CLLocationCoordinate2D)location page:(NSInteger)page
+- (void)loadMorePhotos
 {
-  [self
-      flickrPhotosForLocation:self.currentCoordinates
-                         page:self.currentPage + 1
-              completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
-                // Would handle errors more gracefully in the real world of course...
-                if (nil != error) {
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.refreshControl endRefreshing];
-                    [self.refreshControl removeFromSuperview];
-                    NSLog(@"Flickr page request error = (%@)", error.localizedDescription);
-                  });
-                  return;
+  [self.model
+      photosForLocation:self.currentCoordinates
+                   page:self.currentPage + 1
+        completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
+          // Would handle errors more gracefully in the real world of course...
+          if (nil != error) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [self.refreshControl endRefreshing];
+              [self.refreshControl removeFromSuperview];
+              NSLog(@"Photos load error = (%@)", error.localizedDescription);
+            });
+            return;
+          }
+          // Always keep updating the last page since in theory it could increase
+          // while using the app
+          self.lastPage = pages;
+          if (page == ++self.currentPage) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+              [self.refreshControl endRefreshing];
+              [self.refreshControl removeFromSuperview];
+              // Could just call '[self.collectionView reloadData]' here but that might be a
+              // little choppy on the on the scroll so instead do it the right way and insert
+              // the new rows
+              [self.collectionView performBatchUpdates:^{
+                NSUInteger resultsSize = [self.photoEntries count];
+                [self.photoEntries addObjectsFromArray:photos];
+                NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
+                for (NSUInteger i = resultsSize; i < resultsSize + photos.count; i++) {
+                  [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                 }
-                // Always keep updating the last page since in theory it could increase
-                // while using the app
-                self.lastPage = pages;
-                if (page == ++self.currentPage) {
-                  dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.refreshControl endRefreshing];
-                    [self.refreshControl removeFromSuperview];
-                    // Could just call '[self.collectionView reloadData]' here but that might be a
-                    // little choppy on the on the scroll so instead do it the right way and insert
-                    // the new rows
-                    [self.collectionView performBatchUpdates:^{
-                      NSUInteger resultsSize = [self.photoEntries count];
-                      [self.photoEntries addObjectsFromArray:photos];
-                      NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
-                      for (NSUInteger i = resultsSize; i < resultsSize + photos.count; i++) {
-                        [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-                      }
-                      [self.collectionView insertItemsAtIndexPaths:arrayWithIndexPaths];
-                    } completion:nil];
-                  });
-                } else {
-                  // Uh oh!
-                  NSAssert(NO, @"Uh oh we are adding the same page twice!");
-                }
-              }];
-}
-
-- (void)flickrPhotosForLocation:(CLLocationCoordinate2D)location
-                           page:(NSInteger)page
-                completionBlock:(FlickrNearbyPhotosCompletionBlock)completion
-{
-  NSLog(@"Requesting page %li from Flickr", (long)page);
-
-  NSString *urlString =
-      [NSString stringWithFormat:@"https://api.flickr.com/services/rest/"
-                                 @"?method=flickr.photos.search&api_key=%@&lat=%f&lon=%f&radius=5."
-                                 @"0&extras=geo&per_page=%li&page=%li&format=json&nojsoncallback=1",
-                                 flickrAppKey, location.latitude, location.longitude,
-                                 (long)flickrPhotosPerPage, (long)page];
-
-  NSURLSession *session = [NSURLSession sharedSession];
-  [[session dataTaskWithURL:[NSURL URLWithString:urlString]
-          completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (nil != error) {
-              completion(0, 0, nil, error);
-              return;
-            }
-            NSDictionary *json =
-                [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-            if (nil != error) {
-              completion(0, 0, nil, error);
-              return;
-            }
-            // TODO: Should really check here for a Flickr response error, success, fail, etc
-            if (json && [json isKindOfClass:[NSDictionary class]]) {
-              NSInteger page = [[json[@"photos"] objectForKey:@"page"] integerValue];
-              NSInteger pages = [[json[@"photos"] objectForKey:@"pages"] integerValue];
-              NSArray *photos = json[@"photos"][@"photo"];
-              if (photos && ([photos isKindOfClass:[NSArray class]])) {
-                NSMutableArray *photoEntries = [NSMutableArray new];
-                for (NSDictionary *temp in photos) {
-                  [photoEntries addObject:[[FBMPhotoEntry alloc] initWithPhotoDictionary:temp]];
-                }
-                completion(pages, page, photoEntries, error);
-                return;
-              }
-              completion(0, 0, nil, error);
-            }
-          }] resume];
+                [self.collectionView insertItemsAtIndexPaths:arrayWithIndexPaths];
+              } completion:nil];
+            });
+          } else {
+            NSAssert(NO, @"Uh oh we are adding the same page twice!");
+          }
+        }];
 }
 
 @end
