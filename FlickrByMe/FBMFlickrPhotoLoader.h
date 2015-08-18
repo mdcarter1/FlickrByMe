@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-typedef void (^FBMPhotoPageBlock)(NSInteger pages, NSInteger page, NSArray *photos, NSError *error);
+typedef void (^FBMPhotoPageBlock)(NSInteger pages, NSInteger page, NSArray *photos);
 
 typedef void (^FBMPhotoThumbImageBlock)(UIImage *image);
 
@@ -21,8 +21,12 @@ typedef void (^FBMPhotoThumbImageBlock)(UIImage *image);
                      page:(NSInteger)page
           completionBlock:(FBMPhotoPageBlock)completion;
 
+/**
+ *  Used for retrieving thumbnail image for a given FBMFlickrPhoto.  If a cached version
+ *  of the image is available that will be used for better performance.  For convenience
+ *  to the caller the completionBlock is guaranteed to be called on the main thread.
+ */
 - (void)thumbImageForPhoto:(FBMFlickrPhoto *)photo
-                     queue:(NSOperationQueue *)queue
            completionBlock:(FBMPhotoThumbImageBlock)completion;
 
 @end

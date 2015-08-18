@@ -19,8 +19,6 @@
 
 @property (nonatomic, strong) FBMFlickrPhotoLoader   *photoLoader;
 @property (nonatomic, strong) NSMutableArray         *photoEntries;
-@property (nonatomic, strong) NSCache                *photoCache;
-@property (nonatomic, strong) NSOperationQueue       *photoOpQueue;
 @property (nonatomic, strong) CLLocationManager      *locationManager;
 @property (nonatomic, assign) CLLocationCoordinate2D currentCoordinates;
 @property (nonatomic, strong) UIRefreshControl       *refreshControl;
@@ -45,12 +43,6 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
 
   self.locationManager = [[CLLocationManager alloc] init];
   self.locationManager.delegate = self;
-
-  self.photoCache = [[NSCache alloc] init];
-  [self.photoCache setCountLimit:500];
-
-  self.photoOpQueue = [[NSOperationQueue alloc] init];
-  [self.photoOpQueue setMaxConcurrentOperationCount:3];
 
   // Note: Flickr search API starts pages at index 1 but we will start at zero because
   // we increment post-page fetch
@@ -88,20 +80,26 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
 {
   FBMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                  forIndexPath:indexPath];
-
   FBMFlickrPhoto *photo = [self.photoEntries objectAtIndex:indexPath.row];
 
-  UIImage *cachedPhoto = [self.photoCache objectForKey:[NSNumber numberWithLongLong:photo.photoId]];
-  if (cachedPhoto) {
-    [cell.imageView setImage:cachedPhoto];
-  } else {
-    [cell loadForPhoto:photo
-                  queue:self.photoOpQueue
-        completionBlock:^(UIImage *image) {
-          // Add it to the cache so we can be speedy...
-          [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:photo.photoId]];
-        }];
-  }
+  // Need this?
+  [cell.imageView setImage:nil];
+
+  [self.photoLoader thumbImageForPhoto:photo
+                       completionBlock:^(UIImage *image) {
+                         // This method guarantees a main thread call so we are safe
+                         // to update here directly
+                         FBMPhotoCell *newCell =
+                             (id)[self.collectionView cellForItemAtIndexPath:indexPath];
+                         if (newCell) {
+                           [newCell.imageView setImage:image];
+                         } else {
+                           // If wanted to we could look into doing something more sophisticated
+                           // for canceling any zombie block BEFORE they execute.  This is not
+                           // really an issue until you really start fast scrolling
+                           NSLog(@"Zombie image fetch block!");
+                         }
+                       }];
   return cell;
 }
 
@@ -116,13 +114,6 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
   if ((indexPath.row == [self.photoEntries count] - 1) && (self.currentPage < self.lastPage)) {
     [self loadMorePhotos];
   }
-}
-
-- (void)collectionView:(UICollectionView *)collectionView
-  didEndDisplayingCell:(UICollectionViewCell *)cell
-    forItemAtIndexPath:(NSIndexPath *)indexPath
-{
-  [((FBMPhotoCell *)cell)cancelLoad];
 }
 
 - (void)collectionView:(UICollectionView *)collectionView
@@ -167,13 +158,13 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
   [self.photoLoader
       photosForLocation:self.currentCoordinates
                    page:self.currentPage + 1
-        completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos, NSError *error) {
+        completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos) {
           // Would handle errors more gracefully in the real world of course...
-          if (nil != error) {
+          if (nil == photos) {
             dispatch_async(dispatch_get_main_queue(), ^{
               [self.refreshControl endRefreshing];
               [self.refreshControl removeFromSuperview];
-              NSLog(@"Photos load error = (%@)", error.localizedDescription);
+              NSLog(@"Photos load error");
             });
             return;
           }

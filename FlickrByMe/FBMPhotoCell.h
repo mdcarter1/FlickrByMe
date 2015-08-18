@@ -20,6 +20,4 @@ typedef void (^FBMPhotoCellLoadedBlock)(UIImage *image);
                queue:(NSOperationQueue *)queue
      completionBlock:(FBMPhotoCellLoadedBlock)completion;
 
-- (void)cancelLoad;
-
 @end
