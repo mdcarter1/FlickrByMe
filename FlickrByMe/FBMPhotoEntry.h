@@ -16,6 +16,6 @@
 @property (nonatomic, assign) NSInteger server;
 @property (nonatomic, assign) long long photoId;
 
--(instancetype)initWithPhotoDictionary:(NSDictionary*)dictionary;
+- (instancetype)initWithPhotoDictionary:(NSDictionary *)dictionary;
 
 @end

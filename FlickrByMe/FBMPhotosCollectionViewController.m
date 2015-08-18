@@ -42,27 +42,24 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
 {
   [super viewDidLoad];
 
-  // Uncomment the following line to preserve selection between presentations
-  // self.clearsSelectionOnViewWillAppear = NO;
-
   self.refreshControl = [[UIRefreshControl alloc] init];
   [self.collectionView addSubview:self.refreshControl];
   [self.refreshControl beginRefreshing];
 
   self.locationManager = [[CLLocationManager alloc] init];
   self.locationManager.delegate = self;
-  
+
   self.photoCache = [[NSCache alloc] init];
   [self.photoCache setCountLimit:500];
-  
+
   self.photoOpQueue = [[NSOperationQueue alloc] init];
   [self.photoOpQueue setMaxConcurrentOperationCount:3];
-  
+
   // Note: Flickr search API starts pages at index 1 but we will start at zero because
   // we increment post-page fetch
   self.currentPage = 0;
   self.lastPage = 0;
-  
+
   self.photoEntries = [NSMutableArray new];
 }
 
@@ -138,19 +135,6 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   [self presentViewController:vc animated:YES completion:nil];
 }
 
-#pragma mark - UICollectionViewDelegateFlowLayout
-
-/* Don't need to do this since I'm using fixed sized cells
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout *)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-  FBMPhotoEntry *entry = self.photoEntries[indexPath.row];
-  UIImage *thumb = [self.photoCache objectForKey:[NSNumber numberWithLongLong:entry.photoId]];
-  CGSize size = thumb.size.width > 0 ? thumb.size : CGSizeMake(100, 100);
-  return size;
-}*/
-
 #pragma mark - CLLocationManagerDelegate
 
 - (void)locationManager:(CLLocationManager *)manager
@@ -173,7 +157,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
   // So we would probably want to switch to the significant location monitoring and then reload
   // or update the collection accordingly.  For this app I'm just using the first location.
   [self.locationManager stopUpdatingLocation];
-  
+
   self.currentCoordinates = [(CLLocation *)[locations lastObject] coordinate];
   [self addPhotoPageForLocation:self.currentCoordinates page:self.currentPage + 1];
 }
@@ -191,8 +175,7 @@ typedef void (^FlickrNearbyPhotosCompletionBlock)(NSInteger pages, NSInteger pag
                   dispatch_async(dispatch_get_main_queue(), ^{
                     [self.refreshControl endRefreshing];
                     [self.refreshControl removeFromSuperview];
-                    NSLog(@"Flickr page request error = (%@)",
-                          error.localizedDescription);
+                    NSLog(@"Flickr page request error = (%@)", error.localizedDescription);
                   });
                   return;
                 }

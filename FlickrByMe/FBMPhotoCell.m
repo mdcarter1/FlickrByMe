@@ -11,7 +11,6 @@
 
 @interface FBMPhotoCell ()
 
-//@property (nonatomic, weak) NSOperationQueue *queue;
 @property (nonatomic, strong) NSBlockOperation *operation;
 
 @end

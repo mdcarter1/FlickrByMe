@@ -25,13 +25,13 @@
 
 @implementation FBMLaunchViewController
 
-static const CGFloat kCircleSize = 150;
-static const CGFloat kCircleHalfSize = kCircleSize / 2;
-static const CGFloat kCircleOverlap = 5;
-static const CGFloat kTitleLabelWidth = 225;
-static const CGFloat kTitleLabelHeight = 50;
-static const CGFloat kStartButtonWidth = 200;
-static const CGFloat kStartButtonHeight = 30;
+static CGFloat const kCircleSize = 150;
+static CGFloat const kCircleHalfSize = kCircleSize / 2;
+static CGFloat const kCircleOverlap = 5;
+static CGFloat const kTitleLabelWidth = 225;
+static CGFloat const kTitleLabelHeight = 50;
+static CGFloat const kStartButtonWidth = 200;
+static CGFloat const kStartButtonHeight = 30;
 
 - (void)viewDidLoad
 {
@@ -49,14 +49,14 @@ static const CGFloat kStartButtonHeight = 30;
   self.pinkCircle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kCircleSize, kCircleSize)];
   self.pinkCircle.backgroundColor =
       [UIColor colorWithRed:222.0f / 225.0f green:53.0f / 225.0f blue:134.0f / 225.0f alpha:1.0f];
-  self.pinkCircle.layer.cornerRadius = kCircleSize / 2;
+  self.pinkCircle.layer.cornerRadius = kCircleHalfSize;
   self.pinkCircle.center = self.offscreenLeft;
   [self.view addSubview:self.pinkCircle];
 
   self.blueCircle = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kCircleSize, kCircleSize)];
   self.blueCircle.backgroundColor =
       [UIColor colorWithRed:27.0f / 225.0f green:23.0f / 225.0f blue:198.0f / 225.0f alpha:1.0f];
-  self.blueCircle.layer.cornerRadius = kCircleSize / 2;
+  self.blueCircle.layer.cornerRadius = kCircleHalfSize;
   self.blueCircle.center = self.offscreenRight;
   [self.view addSubview:self.blueCircle];
 
