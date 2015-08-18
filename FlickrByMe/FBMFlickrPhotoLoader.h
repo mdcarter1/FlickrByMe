@@ -9,12 +9,20 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-typedef void (^FBMPhotoPageBlock)(NSInteger pages, NSInteger page, NSArray *photos,
-                                                  NSError *error);
+typedef void (^FBMPhotoPageBlock)(NSInteger pages, NSInteger page, NSArray *photos, NSError *error);
+
+typedef void (^FBMPhotoThumbImageBlock)(UIImage *image);
+
+@class FBMFlickrPhoto;
+
 @interface FBMFlickrPhotoLoader : NSObject
 
 - (void)photosForLocation:(CLLocationCoordinate2D)location
                      page:(NSInteger)page
           completionBlock:(FBMPhotoPageBlock)completion;
+
+- (void)thumbImageForPhoto:(FBMFlickrPhoto *)photo
+                     queue:(NSOperationQueue *)queue
+           completionBlock:(FBMPhotoThumbImageBlock)completion;
 
 @end

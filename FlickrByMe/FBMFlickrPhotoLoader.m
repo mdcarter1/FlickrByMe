@@ -58,4 +58,11 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
           }] resume];
 }
 
+- (void)thumbImageForPhoto:(FBMFlickrPhoto *)photo
+                     queue:(NSOperationQueue *)queue
+           completionBlock:(FBMPhotoThumbImageBlock)completion
+{
+  
+}
+
 @end
