@@ -12,7 +12,7 @@
 @interface FBMFlickrPhotoLoader ()
 
 @property (nonatomic, strong) NSOperationQueue *photoOpQueue;
-@property (nonatomic, strong) NSCache                *photoCache;
+@property (nonatomic, strong) NSCache *photoCache;
 
 @end
 
@@ -27,13 +27,13 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
   if (!self) {
     return nil;
   }
-  
+
   self.photoOpQueue = [[NSOperationQueue alloc] init];
   [self.photoOpQueue setMaxConcurrentOperationCount:3];
-  
+
   self.photoCache = [[NSCache alloc] init];
   [self.photoCache setCountLimit:500];
-  
+
   return self;
 }
 
@@ -48,32 +48,29 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
 
     NSData *data = [NSData
         dataWithContentsOfURL:[FBMFlickrPhotoLoader URLForPhotosWithLocation:location page:page]];
-    
-    if (data) {
-      NSError *error;
-      NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-      if (nil != error) {
-        completion(0, 0, nil);
-        return;
-      }
-      // TODO: Should really check here for a Flickr response error, success, fail, etc
-      if (json && [json isKindOfClass:[NSDictionary class]]) {
-        NSInteger page = [[json[@"photos"] objectForKey:@"page"] integerValue];
-        NSInteger pages = [[json[@"photos"] objectForKey:@"pages"] integerValue];
-        NSArray *photos = json[@"photos"][@"photo"];
-        if (photos && ([photos isKindOfClass:[NSArray class]])) {
-          NSMutableArray *photoEntries = [NSMutableArray new];
-          for (NSDictionary *temp in photos) {
-            [photoEntries addObject:[[FBMFlickrPhoto alloc] initWithPhotoDictionary:temp]];
-          }
-          completion(pages, page, photoEntries);
-          return;
-        }
-        completion(0, 0, nil);
-      }
 
+    NSInteger pageCount = -1;
+    NSInteger pageIndex = -1;
+    NSMutableArray *photos = [NSMutableArray new];
+
+    if (data) {
+      // TODO: Real world check here for JSON parse and Flickr bad response
+      NSDictionary *json = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+      if (json && [json isKindOfClass:[NSDictionary class]]) {
+        pageIndex = [[json[@"photos"] objectForKey:@"page"] integerValue];
+        pageCount = [[json[@"photos"] objectForKey:@"pages"] integerValue];
+        NSArray *photoDicts = json[@"photos"][@"photo"];
+        if (photoDicts && ([photoDicts isKindOfClass:[NSArray class]])) {
+          for (NSDictionary *temp in photoDicts) {
+            [photos addObject:[[FBMFlickrPhoto alloc] initWithPhotoDictionary:temp]];
+          }
+        }
+      }
     } else {
-      completion(0, 0, nil);
+      NSLog(@"Photos URL load failed!");
+    }
+    if (completion) {
+      completion(pageCount, pageIndex, photos);
     }
   });
 }
@@ -95,17 +92,18 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
 
     NSData *data =
         [NSData dataWithContentsOfURL:[FBMFlickrPhotoLoader URLForThumbnailWithPhoto:photo]];
+    UIImage *image;
     if (data) {
-      UIImage *image = [UIImage imageWithData:data];
+      image = [UIImage imageWithData:data];
       // Add it to the cache so we can be speedy when/if we need this image again
       [self.photoCache setObject:image forKey:[NSNumber numberWithLongLong:photo.photoId]];
-      if (completion) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-          completion(image);
-        });
-      }
     } else {
       NSLog(@"Thumbmail URL load failed!");
+    }
+    if (completion) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        completion(image);
+      });
     }
   }];
 
