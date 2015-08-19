@@ -70,6 +70,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
     } else {
       NSLog(@"Photos URL load failed!");
     }
+    
     if (completion) {
       completion(pageCount, pageIndex, photos);
     }
@@ -94,6 +95,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
     NSData *data =
         [NSData dataWithContentsOfURL:[FBMFlickrPhotoLoader URLForThumbnailWithPhoto:photo]];
     UIImage *image;
+    
     if (data) {
       image = [UIImage imageWithData:data];
       // Add it to the cache so we can be speedy when/if we need this image again
@@ -101,6 +103,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
     } else {
       NSLog(@"Thumbmail URL load failed!");
     }
+    
     if (completion) {
       dispatch_async(dispatch_get_main_queue(), ^{
         completion(image);

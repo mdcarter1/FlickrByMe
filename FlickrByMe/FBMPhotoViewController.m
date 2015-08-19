@@ -54,6 +54,7 @@
     if (data) {
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.activityView stopAnimating];
+        
         UIImage *image = [self imageScaledForCurrentSizeClass:data];
         UIViewContentMode mode = [self isTabletSizeClass] ? UIViewContentModeScaleAspectFit
                                                           : UIViewContentModeScaleAspectFill;
@@ -64,12 +65,14 @@
         }
         [self.imageView setContentMode:mode];
         [self.imageView setImage:image];
+        
         // Account for empty title
         if (!photo.title || photo.title.length == 0) {
           [self.titleView setText:@"Untitled"];
         } else {
           [self.titleView setText:photo.title];
         }
+        
         // This will smooth the presentation so we don't get a hard pop when the images
         // are show drawn
         [UIView animateWithDuration:1

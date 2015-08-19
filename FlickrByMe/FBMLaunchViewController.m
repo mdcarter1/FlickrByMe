@@ -79,6 +79,7 @@ static CGFloat const kStartButtonHeight = 30;
         self.pinkCircle.center = self.onscreenRight;
       }
       completion:^(BOOL finished) {
+        
         [UIView animateWithDuration:1
             delay:0
             options:(UIViewAnimationOptionCurveLinear)
@@ -88,6 +89,7 @@ static CGFloat const kStartButtonHeight = 30;
             }
             completion:^(BOOL finished){
             }];
+        
       }];
 
   self.startButton.layer.cornerRadius = 10;

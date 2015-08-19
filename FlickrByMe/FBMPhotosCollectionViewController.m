@@ -159,6 +159,7 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
       photosForLocation:self.currentCoordinates
                    page:self.currentPage + 1
         completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos) {
+
           // Would handle errors more gracefully in the real world of course...
           if (nil == photos || page == -1 || pages == -1) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -168,27 +169,35 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
             });
             return;
           }
+
           NSLog(@"Rcv page %li of %li from Flickr", (long)page, (long)pages);
           // Always keep updating the last page since in theory it could increase
           // while using the app
           self.lastPage = pages;
           if (page == ++self.currentPage) {
             dispatch_async(dispatch_get_main_queue(), ^{
+
               [self.refreshControl endRefreshing];
               [self.refreshControl removeFromSuperview];
+
               // Could just call '[self.collectionView reloadData]' here but that might be a
               // little choppy on the on the scroll so instead do it the right way and insert
               // the new rows
               [self.collectionView performBatchUpdates:^{
-                NSUInteger resultsSize = [self.photoEntries count];
+                
+                NSUInteger curSize = [self.photoEntries count];
                 [self.photoEntries addObjectsFromArray:photos];
+                
                 NSMutableArray *arrayWithIndexPaths = [NSMutableArray array];
-                for (NSUInteger i = resultsSize; i < resultsSize + photos.count; i++) {
+                for (NSUInteger i = curSize; i < curSize + photos.count; i++) {
                   [arrayWithIndexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
                 }
+                // This will cause the new items to animate in
                 [self.collectionView insertItemsAtIndexPaths:arrayWithIndexPaths];
               } completion:nil];
+
             });
+
           } else {
             NSAssert(NO, @"Uh oh we are adding the same page twice!");
           }
