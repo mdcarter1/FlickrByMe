@@ -41,49 +41,50 @@
 {
   _photo = photo;
 
+  // TODO: This Flickr stuff could be moved over to FBMFlickrPhototLoader to be more
+  // consistent
   NSString *urlString =
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
       [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_b.jpg",
                                  (long)photo.farm, (long)photo.server, photo.photoId, photo.secret];
 
-  NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:urlString]];
-  [NSURLConnection
-      sendAsynchronousRequest:request
-                        queue:[NSOperationQueue new]
-            completionHandler:^(NSURLResponse *response, NSData *data, NSError *connectionError) {
-              dispatch_async(dispatch_get_main_queue(), ^{
-                [self.activityView stopAnimating];
-                UIImage *image = [self imageScaledForCurrentSizeClass:data];
-                UIViewContentMode mode = [self isTabletSizeClass]
-                                             ? UIViewContentModeScaleAspectFit
-                                             : UIViewContentModeScaleAspectFill;
-                if ([self isTabletSizeClass]) {
-                  [self.imageHeight setConstant:image.size.height];
-                  [self.imageWidth setConstant:image.size.width];
-                  [self.imageView setNeedsUpdateConstraints];
-                }
-                [self.imageView setContentMode:mode];
-                [self.imageView setImage:image];
-                // Account for empty title
-                if (!photo.title || photo.title.length == 0) {
-                  [self.titleView setText:@"Untitled"];
-                } else {
-                  [self.titleView setText:photo.title];
-                }
-                // This will smooth the presentation so we don't get a hard pop when the images
-                // are show drawn
-                [UIView animateWithDuration:1
-                    delay:0
-                    options:(UIViewAnimationOptionCurveLinear)
-                    animations:^{
-                      self.borderView.alpha = 1.0;
-                      self.imageView.alpha = 1.0;
-                      self.titleView.alpha = 1.0;
-                    }
-                    completion:^(BOOL finished){
-                    }];
-              });
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
+
+    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+    if (data) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityView stopAnimating];
+        UIImage *image = [self imageScaledForCurrentSizeClass:data];
+        UIViewContentMode mode = [self isTabletSizeClass] ? UIViewContentModeScaleAspectFit
+                                                          : UIViewContentModeScaleAspectFill;
+        if ([self isTabletSizeClass]) {
+          [self.imageHeight setConstant:image.size.height];
+          [self.imageWidth setConstant:image.size.width];
+          [self.imageView setNeedsUpdateConstraints];
+        }
+        [self.imageView setContentMode:mode];
+        [self.imageView setImage:image];
+        // Account for empty title
+        if (!photo.title || photo.title.length == 0) {
+          [self.titleView setText:@"Untitled"];
+        } else {
+          [self.titleView setText:photo.title];
+        }
+        // This will smooth the presentation so we don't get a hard pop when the images
+        // are show drawn
+        [UIView animateWithDuration:1
+            delay:0
+            options:(UIViewAnimationOptionCurveLinear)
+            animations:^{
+              self.borderView.alpha = 1.0;
+              self.imageView.alpha = 1.0;
+              self.titleView.alpha = 1.0;
+            }
+            completion:^(BOOL finished){
             }];
+      });
+    }
+  });
 }
 
 #pragma mark - Actions
