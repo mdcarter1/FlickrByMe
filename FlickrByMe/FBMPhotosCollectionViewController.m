@@ -56,10 +56,8 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
 - (void)viewWillAppear:(BOOL)animated
 {
   [super viewWillAppear:animated];
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
   if ([self.locationManager respondsToSelector:@selector(requestWhenInUseAuthorization)])
     [self.locationManager requestWhenInUseAuthorization];
-#endif
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -80,10 +78,9 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
 {
   FBMPhotoCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:reuseIdentifier
                                                                  forIndexPath:indexPath];
-  FBMFlickrPhoto *photo = [self.photoEntries objectAtIndex:indexPath.row];
-
-  // Need this?
   [cell.imageView setImage:nil];
+
+  FBMFlickrPhoto *photo = [self.photoEntries objectAtIndex:indexPath.row];
 
   [self.photoLoader thumbImageForPhoto:photo
                        completionBlock:^(UIImage *image) {
@@ -91,6 +88,7 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
                          // to update here directly
                          FBMPhotoCell *newCell =
                              (id)[self.collectionView cellForItemAtIndexPath:indexPath];
+                         // Cell will be nil if it is no longer on the screen
                          if (newCell) {
                            [newCell.imageView setImage:image];
                          } else {

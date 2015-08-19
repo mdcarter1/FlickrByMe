@@ -15,7 +15,6 @@
 @property (strong, nonatomic) UIView  *pinkCircle;
 @property (strong, nonatomic) UIView  *blueCircle;
 @property (strong, nonatomic) UILabel *titleLabel;
-
 @property (assign, nonatomic) CGPoint offscreenLeft;
 @property (assign, nonatomic) CGPoint offscreenRight;
 @property (assign, nonatomic) CGPoint onscreenLeft;

@@ -10,14 +10,8 @@
 
 @class FBMFlickrPhoto;
 
-typedef void (^FBMPhotoCellLoadedBlock)(UIImage *image);
-
 @interface FBMPhotoCell : UICollectionViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
-
-- (void)loadForPhoto:(FBMFlickrPhoto *)photo
-               queue:(NSOperationQueue *)queue
-     completionBlock:(FBMPhotoCellLoadedBlock)completion;
 
 @end

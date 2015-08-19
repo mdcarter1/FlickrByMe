@@ -12,7 +12,7 @@
 @interface FBMFlickrPhotoLoader ()
 
 @property (nonatomic, strong) NSOperationQueue *photoOpQueue;
-@property (nonatomic, strong) NSCache *photoCache;
+@property (nonatomic, strong) NSCache          *photoCache;
 
 @end
 
@@ -29,6 +29,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
   }
 
   self.photoOpQueue = [[NSOperationQueue alloc] init];
+  // Can play with this to see what value works best
   [self.photoOpQueue setMaxConcurrentOperationCount:3];
 
   self.photoCache = [[NSCache alloc] init];
