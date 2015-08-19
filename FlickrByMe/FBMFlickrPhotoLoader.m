@@ -42,7 +42,7 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
                      page:(NSInteger)page
           completionBlock:(FBMPhotoPageBlock)completion
 {
-  NSLog(@"Requesting page %li from Flickr", (long)page);
+  NSLog(@"Req page %li from Flickr", (long)page);
 
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
 

@@ -170,6 +170,7 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
             });
             return;
           }
+          NSLog(@"Rcv page %li of %li from Flickr", (long)page, (long)pages);
           // Always keep updating the last page since in theory it could increase
           // while using the app
           self.lastPage = pages;
