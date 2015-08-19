@@ -86,6 +86,14 @@
             completion:^(BOOL finished){
             }];
       });
+    } else {
+      // Image did not load
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.activityView stopAnimating];
+        self.imageView.alpha = 1.0;
+        [self.imageView setContentMode:UIViewContentModeCenter];
+        [self.imageView setImage:[UIImage imageNamed:@"IconFailed"]];
+      });
     }
   });
 }
