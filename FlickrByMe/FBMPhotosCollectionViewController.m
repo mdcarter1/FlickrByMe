@@ -160,7 +160,7 @@ static NSString *const reuseIdentifier = @"FlickrPhotoCell";
                    page:self.currentPage + 1
         completionBlock:^(NSInteger pages, NSInteger page, NSArray *photos) {
           // Would handle errors more gracefully in the real world of course...
-          if (nil == photos) {
+          if (nil == photos || page == -1 || pages == -1) {
             dispatch_async(dispatch_get_main_queue(), ^{
               [self.refreshControl endRefreshing];
               [self.refreshControl removeFromSuperview];

@@ -126,6 +126,8 @@ static NSString *const flickrAppKey = @"58113b676ebff68e3c1c05f58c8a8cf7";
 
 + (NSURL *)URLForThumbnailWithPhoto:(FBMFlickrPhoto *)photo
 {
+  // TODO: On lower density ala @2x devices we may be able to get away with using _t which
+  // is smaller
   NSString *urlString =
       // Got this here: https://www.flickr.com/services/api/misc.urls.html
       [NSString stringWithFormat:@"http://farm%ld.static.flickr.com/%ld/%lld_%@_m.jpg",
