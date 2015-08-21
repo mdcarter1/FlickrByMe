@@ -54,25 +54,19 @@
     if (data) {
       dispatch_async(dispatch_get_main_queue(), ^{
         [self.activityView stopAnimating];
-        
+
         UIImage *image = [self imageScaledForCurrentSizeClass:data];
-        UIViewContentMode mode = [self isTabletSizeClass] ? UIViewContentModeScaleAspectFit
-                                                          : UIViewContentModeScaleAspectFill;
-        if ([self isTabletSizeClass]) {
-          [self.imageHeight setConstant:image.size.height];
-          [self.imageWidth setConstant:image.size.width];
-          [self.imageView setNeedsUpdateConstraints];
-        }
-        [self.imageView setContentMode:mode];
+        [self.imageHeight setConstant:image.size.height];
+        [self.imageWidth setConstant:image.size.width];
+        
         [self.imageView setImage:image];
+        [self.imageView setContentMode:[self isTabletSizeClass] ? UIViewContentModeScaleAspectFit
+                                      : UIViewContentModeScaleAspectFill];
+        [self.imageView setNeedsUpdateConstraints];
         
         // Account for empty title
-        if (!photo.title || photo.title.length == 0) {
-          [self.titleView setText:@"Untitled"];
-        } else {
-          [self.titleView setText:photo.title];
-        }
-        
+        [self.titleView setText:(photo.title.length == 0) ? @"Untitled" : photo.title];
+
         // This will smooth the presentation so we don't get a hard pop when the images
         // are show drawn
         [UIView animateWithDuration:1
